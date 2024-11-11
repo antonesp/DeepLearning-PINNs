@@ -8,6 +8,10 @@ from torch.nn.parameter import Parameter
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Check if a GPU is available
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = "cpu"
+
 def grad(func, var):
     '''
     Computes the gradient of a function with respect to a variable.
@@ -25,95 +29,89 @@ def grad(func, var):
 class PINN(nn.Module):
     
     def __init__(self):
-        super().__init__()
+        super().__init__()       
+        self.activation = nn.Tanh()
         
-        self.a = Parameter(data=torch.tensor(0.5), requires_grad=True)
-        
-        self.activation = F.relu
-        
-        self.input = nn.Linear(in_features=1, out_features=100)
-        
-        self.hidden = nn.Linear(in_features=100, out_features=100)
-        
-        self.output = nn.Linear(in_features=100, out_features=1)
+        self.input = nn.Linear(in_features=1, out_features=20)
+        self.hidden = nn.Linear(in_features=20, out_features=20)
+        self.output = nn.Linear(in_features=20, out_features=1)
 
     def forward(self, t):
-        u = self.input(t)
-        u = self.activation(u)
-        u = self.hidden(u)
-        u = self.activation(u)
-        u = self.hidden(u)
-        u = self.activation(u)
-        u = self.hidden(u)
-        u = self.activation(u)
+        u = self.activation(self.input(t))
+        u = self.activation(self.hidden(u))
         u = self.output(u)
         return u
         
     
     def loss(self, t):
+        
+        # Define the PDE loss
         u = self.forward(t)
         u_t = grad(u, t)
-        
-        ode = u_t - self.a * u
-        initial_condition = self.forward(torch.ones_like(t) * 0) - 1
-        
-        # Observed points, e.g., (t, y) pairs from y = exp(2 * t)
-        t_observed = torch.tensor([[0.5], [1.0]], requires_grad=True)
-        u_observed = torch.exp(2 * t_observed)  # Expected y values for given t points
-        u_pred = model(t_observed)
-        
-        # Compute MSE
+        ode = u_t - a * u
         loss_ode = torch.mean(ode**2)
+
+        # Define the initial condition loss
+        initial_condition = self.forward(torch.zeros(100).reshape(-1, 1)) - 1.0
         loss_ics = torch.mean(initial_condition**2)
+        
+        # Define the data loss
+        t_observed = torch.linspace(0, 1, 10, ).reshape(-1, 1)
+        u_observed = torch.exp(3 * t_observed)  # Expected y values for given t points
+        u_pred = self.forward(t_observed)
         loss_data = torch.mean((u_pred - u_observed)**2)
-        
-        
-        
-        loss = loss_ode + 10*loss_ics + 10*loss_data
+                
+        # Combine the loss function
+        loss = loss_ode + loss_ics + loss_data
         
         return loss
     
-    def data_loss(self):
-        # Observed points, e.g., (t, y) pairs from y = exp(2 * t)
-        t_observed = torch.tensor([[0.5], [1.0]], requires_grad=True)
-        y_observed = torch.exp(2 * t_observed)  # Expected y values for given t points
-        y_pred = model(t_observed)
-        return torch.mean((y_pred - y_observed)**2)
-
 if __name__ == "__main__":
-    
     model = PINN()
+    # print(model.parameters)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    # self.a = Parameter(data=torch.tensor(0.5), requires_grad=True)
+    a = torch.tensor([0.0], requires_grad=True)
+
+    optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.01)
     
-    t_train = torch.rand(100, 1)
-    t_train.requires_grad = True
+    t_train = torch.linspace(0, 1, 100, requires_grad=True).reshape(-1, 1)
     
-    for i in range(100000):
-        loss = model.loss(t_train)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        
-        if i%(100000/10) == 0:
-            print("training: ", loss)
-            
-            
+    num_epoch = 5000
+
+    # Enable interactive mode for live plotting
+    plt.ion()
+    fig, ax = plt.subplots(figsize=(10, 6))
+
     # Testing
-    t_test = torch.linspace(0, 1, 100).reshape(-1, 1)
+    t_test = torch.linspace(0, 1, 100, ).reshape(-1, 1)
     
-    y_exact = np.exp(2 * t_test.detach().numpy())
+    y_exact = np.exp(3 * t_test.detach().numpy())
     y_pred = model(t_test).detach().numpy()
     
     t_vals = t_test.detach().numpy()
-    # print(model(t_test))
-    # Plotting
-    plt.figure(figsize=(10, 6))
-    plt.plot(t_vals, y_exact, label="Exact Solution $y(t) = e^t$", linestyle="--")
-    plt.plot(t_vals, y_pred, label="PINN Approximation", linestyle="-")
-    plt.xlabel("Time $t$")
-    plt.ylabel("$y(t)$")
-    plt.title("PINN Solution vs Exact Solution for $y_t = y$, $y(0) = 1$")
-    plt.legend()
-    plt.grid(True)
+
+    for epoch in range(num_epoch):
+        optimizer.zero_grad()
+        loss = model.loss(t_train)
+        loss.backward()
+        optimizer.step()
+        
+        if epoch%(num_epoch/10) == 0:
+            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Estimated a: {a.item():.6f}")
+        
+            # Update the plot every (num_epoch // 10) epochs
+            ax.clear()  # Clear previous plots
+            y_pred = model(t_test).detach().numpy()
+            ax.plot(t_vals, y_exact, label="Exact Solution $y(t) = e^{3t}$", linestyle="--")
+            ax.plot(t_vals, y_pred, label="PINN Approximation", linestyle="-")
+            ax.set_xlabel("Time $t$")
+            ax.set_ylabel("$y(t)$")
+            ax.set_title(f"PINN Solution vs Exact Solution\nEstimated a: {a.item():.4f}, Epoch: {epoch}")
+            ax.legend()
+            ax.grid(True)
+            plt.pause(0.1)  # Pause to update the figure
+
+    # Turn off interactive mode and show the final plot
+    plt.ioff()
     plt.show()
