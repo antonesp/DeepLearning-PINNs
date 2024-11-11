@@ -27,9 +27,16 @@ def custom_csv_parser(file_path, Training=True):
             values = [float(x) for x in parts[1:] if x]  # Filter out empty strings
             data[key] = values
         elif line.startswith('tau1') or line.startswith('tau2') or line.startswith('Ci') or line.startswith('p2') or line.startswith('Si') or line.startswith('GEZI') or line.startswith('EGP0') or line.startswith('Vg') or line.startswith('taum') or line.startswith('tausc'):
-            if line.startswith('Si') and not Training:
+            if not Training:
+                if line.startswith('Si'):
+                    pass
+                else:
+                    key, value, _ = line.split(',')
+                    data[key] = float(value)
+            else:
                 key, value, _ = line.split(',')
                 data[key] = float(value)
+
     if Training:
         print('Training data loaded successfully!')
     else:
