@@ -13,6 +13,7 @@ class PINN(nn.Module):
         super(PINN, self).__init__()
         
         
+        
         # Define activation function
         self.activation = nn.ReLU()
         
@@ -21,7 +22,13 @@ class PINN(nn.Module):
         return x
 
 
-    def MVP(self, x, d, t):
+    def MVP(self, x, u, d, pf):
+        """
+        Input:
+            x: Is the state tensor 
+        """
+        
+        
         # Meal system
         D_1 = Parameter()
         D_2 = Parameter()
@@ -39,7 +46,7 @@ class PINN(nn.Module):
         S_I = Parameter() # [(dL/mU)/min]
         
         # Known patient paramter
-        tau_1 = 49      # [min]
+        tau_1 = pf[0]49      # [min]
         tau_2 = 47      # [min]
         C_I = 20.1      # [dL/min]
         p_2 = 0.0106    # [min^(-1)]
@@ -58,15 +65,19 @@ class PINN(nn.Module):
         G_t = G.grad
         G_sc_t = G_sc.grad
         
+        Gradients = torch.tensor([D_1_t, D_2_t, I_sc_t, I_p_t, I_eff_t, G_t, G_sc_t])
+        
         # Define our ODEs
         Meal_1 = D_1_t - d + (D_1 / tau_m)
         Meal_2 = D_2_t - (D_1 / tau_m) + (D_2 / tau_m)
         
-        Insulin1 = I_sc_t - (u / (tau_1*C_I)) - (I_sc / tau_1)
+        Insulin1 = I_sc_t - (u / (tau_1 * C_I)) - (I_sc / tau_1)
         Insulin2 = (I_sc - I_p) / tau_2
         Insulin3 = -p_2 * I_eff + p_2 * S_I * I_p
         
         Glucose1 = -(GEZI + I_eff) * G + EGP_0 + ((1000 * D_2) / (V_G * tau_m))
         Glucose2 = (G - G_sc) / tau_sc
         
-        return torch.tensor([Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2])
+        ODE = torch.tensor([Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2])
+        
+        return Gradients, ODE
