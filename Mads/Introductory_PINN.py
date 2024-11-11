@@ -8,10 +8,6 @@ from torch.nn.parameter import Parameter
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Check if a GPU is available
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# device = "cpu"
-
 def grad(func, var):
     '''
     Computes the gradient of a function with respect to a variable.
@@ -48,7 +44,6 @@ class PINN(nn.Module):
         # Define the PDE loss
         u = self.forward(t)
         u_t = grad(u, t)
-        # ode = u_t - a * u
         ode = u_t - a * u
         loss_ode = torch.mean(ode**2)
 
@@ -57,7 +52,7 @@ class PINN(nn.Module):
         loss_ics = torch.mean(initial_condition**2)
         
         # Define the data loss
-        t_observed = torch.linspace(0, 1, 10, ).reshape(-1, 1)
+        t_observed = torch.linspace(0, 1, 10).reshape(-1, 1)
         u_observed = torch.exp(3 * t_observed)  # Expected y values for given t points
         u_pred = self.forward(t_observed)
         loss_data = torch.mean((u_pred - u_observed)**2)
@@ -69,35 +64,43 @@ class PINN(nn.Module):
     
 if __name__ == "__main__":
     model = PINN()
-    # print(model.parameters)
 
-    # self.a = Parameter(data=torch.tensor(0.5), requires_grad=True)
-    a = torch.tensor([0.0], requires_grad=True)
+    # Define our parameter we want to estimate with initial guess
+    a = torch.tensor([1.0], requires_grad=True)
 
+    # Add the parameter to our optimizer
     optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.01)
     
-    t_train = torch.linspace(0, 1, 100, requires_grad=True).reshape(-1, 1)
+    # Define the training t data, collocation points
+    # t_train = torch.linspace(0, 1, 100, requires_grad=True).reshape(-1, 1)
     
-    num_epoch = 5000
+    # Can also be done with random numbers
+    t_train = torch.rand(100, 1)
+    t_train.requires_grad = True
+
+    # Define number of epoch
+    num_epoch = 10000
 
     # Enable interactive mode for live plotting
     plt.ion()
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Testing
-    t_test = torch.linspace(0, 1, 100, ).reshape(-1, 1)
+    # Create the testing
+    t_test = torch.linspace(0, 1, 100).reshape(-1, 1)
+    y_pred = model(t_test).detach().numpy()
     
     y_exact = np.exp(3 * t_test.detach().numpy())
-    y_pred = model(t_test).detach().numpy()
     
     t_vals = t_test.detach().numpy()
 
+    # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
         loss = model.loss(t_train)
         loss.backward()
         optimizer.step()
         
+        # Create the console output and plot
         if epoch%(num_epoch/50) == 0:
             print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Estimated a: {a.item():.6f}")
         
@@ -111,7 +114,7 @@ if __name__ == "__main__":
             ax.set_title(f"PINN Solution vs Exact Solution\nEstimated a: {a.item():.4f}, Epoch: {epoch}")
             ax.legend()
             ax.grid(True)
-            plt.pause(0.1)  # Pause to update the figure
+            plt.pause(0.01)  # Pause to update the figure
 
     # Turn off interactive mode and show the final plot
     plt.ioff()
