@@ -48,6 +48,7 @@ class PINN(nn.Module):
         # Define the PDE loss
         u = self.forward(t)
         u_t = grad(u, t)
+        # ode = u_t - a * u
         ode = u_t - a * u
         loss_ode = torch.mean(ode**2)
 
@@ -97,7 +98,7 @@ if __name__ == "__main__":
         loss.backward()
         optimizer.step()
         
-        if epoch%(num_epoch/10) == 0:
+        if epoch%(num_epoch/50) == 0:
             print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Estimated a: {a.item():.6f}")
         
             # Update the plot every (num_epoch // 10) epochs
