@@ -39,7 +39,7 @@ class PINN(nn.Module):
         return u
         
     
-    def loss(self, t):
+    def loss(self, t, true_coef=2):
         
         # Define the PDE loss
         u = self.forward(t)
@@ -48,12 +48,13 @@ class PINN(nn.Module):
         loss_ode = torch.mean(ode**2)
 
         # Define the initial condition loss
-        initial_condition = self.forward(torch.zeros(100).reshape(-1, 1)) - 1.0
+        initial_t = torch.zeros(100, device=t.device).reshape(-1, 1)
+        initial_condition = self.forward(initial_t) - 1.0
         loss_ics = torch.mean(initial_condition**2)
         
         # Define the data loss
-        t_observed = torch.linspace(0, 1, 10).reshape(-1, 1)
-        u_observed = torch.exp(3 * t_observed)  # Expected y values for given t points
+        t_observed = torch.linspace(0, 1, 10, device=t.device).reshape(-1, 1)
+        u_observed = torch.exp(true_coef * t_observed)  # Expected y values for given t points
         u_pred = self.forward(t_observed)
         loss_data = torch.mean((u_pred - u_observed)**2)
                 
@@ -63,40 +64,44 @@ class PINN(nn.Module):
         return loss
     
 if __name__ == "__main__":
-    model = PINN()
+    # Check for CUDA availability
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # Define our model
+    model = PINN().to(device)
 
     # Define our parameter we want to estimate with initial guess
-    a = torch.tensor([1.0], requires_grad=True)
+    a = torch.tensor([1.0], requires_grad=True, device=device)
+    true_a = torch.tensor([3.0], requires_grad=True, device=device)
 
     # Add the parameter to our optimizer
     optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.01)
     
     # Define the training t data, collocation points
-    # t_train = torch.linspace(0, 1, 100, requires_grad=True).reshape(-1, 1)
+    # t_train = torch.linspace(0, 1, 100, requires_grad=True, device=device).reshape(-1, 1)
     
     # Can also be done with random numbers
-    t_train = torch.rand(100, 1)
-    t_train.requires_grad = True
+    t_train = torch.rand(100, 1, requires_grad=True, device=device)
 
     # Define number of epoch
-    num_epoch = 10000
+    num_epoch = 5000
 
     # Enable interactive mode for live plotting
     plt.ion()
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Create the testing
-    t_test = torch.linspace(0, 1, 100).reshape(-1, 1)
-    y_pred = model(t_test).detach().numpy()
+    t_test = torch.linspace(0, 1, 100, device=device).reshape(-1, 1)
+    y_pred = model(t_test).detach().cpu().numpy()
     
-    y_exact = np.exp(3 * t_test.detach().numpy())
+    t_vals = t_test.detach().cpu().numpy()
     
-    t_vals = t_test.detach().numpy()
+    y_exact = np.exp(true_a.detach().cpu().numpy() * t_vals)
 
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss = model.loss(t_train)
+        loss = model.loss(t_train, true_coef=true_a)
         loss.backward()
         optimizer.step()
         
@@ -106,7 +111,7 @@ if __name__ == "__main__":
         
             # Update the plot every (num_epoch // 10) epochs
             ax.clear()  # Clear previous plots
-            y_pred = model(t_test).detach().numpy()
+            y_pred = model(t_test).detach().cpu().numpy()
             ax.plot(t_vals, y_exact, label="Exact Solution $y(t) = e^{3t}$", linestyle="--")
             ax.plot(t_vals, y_pred, label="PINN Approximation", linestyle="-")
             ax.set_xlabel("Time $t$")
