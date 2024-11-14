@@ -75,7 +75,7 @@ if __name__ == "__main__":
     true_a = torch.tensor([3.0], requires_grad=True, device=device)
 
     # Add the parameter to our optimizer
-    optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.01)
+    optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.001)
     
     # Define the training t data, collocation points
     # t_train = torch.linspace(0, 1, 100, requires_grad=True, device=device).reshape(-1, 1)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     t_train = torch.rand(100, 1, requires_grad=True, device=device)
 
     # Define number of epoch
-    num_epoch = 5000
+    num_epoch = 10000
 
     # Enable interactive mode for live plotting
     plt.ion()
