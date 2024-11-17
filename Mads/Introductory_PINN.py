@@ -118,7 +118,6 @@ if __name__ == "__main__":
             print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Estimated a: {a.item():.6f}")
         
             # Update the plot every (num_epoch // 10) epochs
-            ax.clear()  # Clear previous plots
             y_pred = model(t_test).detach().cpu().numpy()
             ax.plot(t_vals, y_exact, label="Exact Solution $y(t) = e^{3t}$", linestyle="--")
             ax.plot(t_vals, y_pred, label="PINN Approximation", linestyle="-")
@@ -127,7 +126,8 @@ if __name__ == "__main__":
             ax.set_title(f"PINN Solution vs Exact Solution\nEstimated a: {a.item():.4f}, Epoch: {epoch}")
             ax.legend()
             ax.grid(True)
-            plt.pause(0.01)  # Pause to update the figure
+            plt.pause(0.01)  # Pause to update the figure ax.clear()  # Clear previous plots
+           
 
     # Turn off interactive mode and show the final plot
     plt.ioff()
