@@ -5,6 +5,7 @@ from torch import Tensor                  # tensor node in the computation graph
 import torch.nn as nn                     # neural networks
 import torch.optim as optim               # optimizers e.g. gradient descent, ADAM, etc.
 from torch.nn.parameter import Parameter
+from torch.utils.data import random_split
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -31,7 +32,7 @@ if device == 'cuda':
 # Parameters for equation
 
 def grad(function,var):
-    return autograd.grad(function, var, grad_outputs=torch.ones_like(function), create_graph=True)[0]
+    return autograd.grad(function, var, grad_outputs=torch.ones_like(function), create_graph=True,retain_graph=True)[0]
 
 
 
@@ -111,7 +112,12 @@ class PINN(nn.Module):
         loss_data = loss_D1 + loss_D2 + loss_I_sc + loss_I_p + loss_I_eff + loss_G + loss_G_sc
         return loss_data
 
-    def LossPDE(self,t,d,u):
+    def LossPDE(self,t,data):
+
+        u = data["Steady_insulin"]
+        u[0] += data["Bolus"][0]
+        d = torch.zeros_like(t)
+        d[0] = data["Meal_size"][0]
 
         X = self.forward(t)
 
@@ -125,15 +131,15 @@ class PINN(nn.Module):
         G = X[:,5]
         G_sc = X[:,6]
 
-        D1_t = D1.grad()
-        D2_t = D2.grad()
+        D1_t = grad(D1,t)
+        D2_t = grad(D2,t)
 
-        I_sc_t = I_sc.grad()
-        I_p_t = I_p.grad()
-        I_eff_t = I_eff.grad()
+        I_sc_t = grad(I_sc,t)
+        I_p_t = grad(I_p,t)
+        I_eff_t = grad(I_eff,t)
 
-        G_t = G.grad()
-        G_sc_t = G_sc.grad()
+        G_t = grad(G,t)
+        G_sc_t = grad(G_sc,t)
 
         # Parameters
         tau_1 = self.tau_1
@@ -150,7 +156,7 @@ class PINN(nn.Module):
 
         # Meal equations
         eq_M1 = D1_t - (d - D1/tau_m)
-        eq_M2 =  D2_t - ( (D1-D2) / tau_m )
+        eq_M2 =  D2_t - ( D1/tau_m-D2/tau_m )
 
         # Insulin equations
         eq_I1 = I_sc_t - (u/(tau_1*C_I) - I_sc/tau_1)
@@ -166,9 +172,9 @@ class PINN(nn.Module):
 
         return loss_PDE
         
-    def LossComb(self,t,d,u,data):
+    def LossComb(self,t,data):
         loss_data = self.LossData(t,data)
-        loss_pde = self.LossPDE(t,d,u)
+        loss_pde = self.LossPDE(t,data)
 
         # print("bc data type: ",type(loss_bc))
         # print("pde data type: ",type(loss_pde))
@@ -178,8 +184,9 @@ class PINN(nn.Module):
 
 
 if __name__ == "__main__":
-    layers = np.array([1,50,50,1])
-    starting_guess = 0.001
+
+    layers = np.array([1,128,128,128,7])
+    starting_guess = 0.01
 
     ## Load data
 
@@ -188,14 +195,60 @@ if __name__ == "__main__":
 
     # split data into validation and trainning
 
-    t_train, t_val, data_train, data_val = train_test_split(data["t"], data, test_size=0.2, random_state=42)
+    # t_train, t_val, data_train, data_val = train_test_split(data["t"], data, test_size=0.2, random_state=42)
+    torch.manual_seed(42)
 
-    # Extract trainning data
+    indices = torch.randperm(n_data)
+
+    n_train = int(n_data * 0.1)   # 80% training data
+
+    train_indices = indices[:n_train]
+    val_indices = indices[n_train:]
+
+    # Define  
+    T = 300
+
+    t_data = torch.linspace(0, T, n_data, device=device,requires_grad=True)
+    t_train_data = t_data[train_indices].reshape(-1, 1)
+    t_val_data = t_data[val_indices].reshape(-1, 1)
+
+
+    # Split the data dictionary 
+    data_train = {}
+    data_val = {}
+
+    for key in data.keys():
+        data_tensor = torch.tensor(data[key], device=device,requires_grad=True)          # Ensure data is a tensor
+        data_train[key] = data_tensor[train_indices]
+        data_val[key] = data_tensor[val_indices]
+
 
 
     PINN = PINN(layers,starting_guess).to(device)
 
+    numb_of_epochs = 10000
+
+    optimizer = torch.optim.Adam(PINN.parameters(), lr=0.005)
+
+    print(PINN.parameters())
+
     # 
+
+    for epoch in range(numb_of_epochs):
+        optimizer.zero_grad()
+        loss = PINN.LossComb(t_train_data, data_train)
+        loss.backward(retain_graph=True)
+        optimizer.step()
+
+        if epoch % 100 == 0:
+
+            with torch.no_grad():
+                PINN.eval()
+                val_loss = PINN.LossData(t_val_data, data_val)
+
+            print(f"Epoch {epoch}, Trainning Loss: {loss.item():.6f}, Validation Loss: {val_loss.item():.6f} Estimated S_I: {PINN.S_I.item():.6f}, PDE Loss: {PINN.LossPDE(t_train_data, data_train).item():.6f}, Data Loss: {PINN.LossData(t_train_data, data_train).item():.6f}")
+
+
 
 
 
