@@ -24,22 +24,30 @@ def grad(func, var):
 
 class PINN(nn.Module):
     
-    def __init__(self):
+    def __init__(self, input_dim: int = 1, hidden_dim: int = 20, output_dim: int = 1, num_hidden: int = 1):
         super().__init__()       
         self.activation = nn.Tanh()
         
-        self.input = nn.Linear(in_features=1, out_features=20)
-        self.hidden = nn.Linear(in_features=20, out_features=20)
-        self.output = nn.Linear(in_features=20, out_features=1)
+        self.input = nn.Linear(in_features=input_dim, out_features=hidden_dim)
 
-    def forward(self, t):
+        self.hidden = nn.ModuleList()
+        for _ in range(num_hidden):
+            self.hidden.append(nn.Linear(in_features=hidden_dim, out_features=hidden_dim))
+        
+        
+        self.output = nn.Linear(in_features=hidden_dim, out_features=output_dim)
+
+    def forward(self, t: torch.Tensor) -> torch.Tensor:
         u = self.activation(self.input(t))
-        u = self.activation(self.hidden(u))
+
+        for hidden_layer in self.hidden:
+            u = self.activation(hidden_layer(u))
+
         u = self.output(u)
         return u
         
     
-    def loss(self, t, true_coef=2):
+    def loss(self, t: torch.Tensor, true_coef: int = 2) -> torch.float:
         
         # Define the PDE loss
         u = self.forward(t)
@@ -68,7 +76,7 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define our model
-    model = PINN().to(device)
+    model = PINN(num_hidden=2, hidden_dim=60).to(device)
 
     # Define our parameter we want to estimate with initial guess
     a = torch.tensor([1.0], requires_grad=True, device=device)
@@ -78,10 +86,10 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.001)
     
     # Define the training t data, collocation points
-    # t_train = torch.linspace(0, 1, 100, requires_grad=True, device=device).reshape(-1, 1)
+    t_train = torch.linspace(0, 1, 100, requires_grad=True, device=device).reshape(-1, 1)
     
     # Can also be done with random numbers
-    t_train = torch.rand(100, 1, requires_grad=True, device=device)
+    # t_train = torch.rand(100, 1, requires_grad=True, device=device)
 
     # Define number of epoch
     num_epoch = 10000
