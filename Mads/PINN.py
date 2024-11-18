@@ -51,12 +51,12 @@ class PINN(nn.Module):
         self.tau_2 = torch.tensor([47.0], requires_grad=True, device=device)       # [min]
         self.C_I = torch.tensor([20.1], requires_grad=True, device=device)         # [dL/min]
         self.p_2 = torch.tensor([0.0106], requires_grad=True, device=device)       # [min^(-1)]
-        self.GEZI = torch.tensor([0.0022], requires_grad=True, device=device)      # [min^(-1)]
+        # self.GEZI = torch.tensor([0.0022], requires_grad=True, device=device)      # [min^(-1)]
         self.EGP_0 = torch.tensor([1.33], requires_grad=True, device=device)       # [(mg/dL)/min]
         self.V_G = torch.tensor([253.0], requires_grad=True, device=device)        # [dL]
         self.tau_m = torch.tensor([47.0], requires_grad=True, device=device)       # [min]
         self.tau_sc = torch.tensor([5.0], requires_grad=True, device=device)       # [min]
-        self.S_I = torch.tensor([0.0081], requires_grad=True, device=device)
+        # self.S_I = torch.tensor([0.0081], requires_grad=True, device=device)
         
     def forward(self, t):
         u = self.activation(self.input(t))
@@ -75,7 +75,7 @@ class PINN(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def MVP(self, t, u, d):
+    def MVP(self, t, u, d, scaling_mean, scaling_std):
         '''
         Input:
             x: Is the state tensor 
@@ -101,12 +101,12 @@ class PINN(nn.Module):
         tau_2 = self.tau_2
         C_I = self.C_I
         p_2 = self.p_2
-        GEZI = self.GEZI
+        # GEZI = self.GEZI
         EGP_0 = self.EGP_0
         V_G = self.V_G
         tau_m = self.tau_m
         tau_sc = self.tau_sc
-        # S_I = self.S_I
+        # S_I = self.S_I-
         
         # Define gradients needed
         D_1_t = grad(D_1, t)
@@ -118,22 +118,25 @@ class PINN(nn.Module):
         G_sc_t = grad(G_sc, t)
                 
         # Define our ODEs
+        Meal_1 = D_1_t - d + (D_1 / tau_m)
+        Meal_2 = D_2_t - (D_1 / tau_m) + (D_2 / tau_m)
 
-        Meal_1 = D_1_t - (d - (D_1 / tau_m))
-        Meal_2 = D_2_t - ((D_1 / tau_m) - (D_2 / tau_m))
-        
-        Insulin1 = I_sc_t - ((u / (tau_1 * C_I)) - (I_sc / tau_1))
-        Insulin2 = I_p_t - ((I_sc - I_p) / tau_2)
-        Insulin3 = I_eff_t - (-p_2 * I_eff + p_2 * S_I * I_p)
-        
-        Glucose1 = G_t - (-(GEZI + I_eff) * G + EGP_0 + ((1000 * D_2) / (V_G * tau_m)))
-        Glucose2 = G_sc_t - ((G - G_sc) / tau_sc)
-        
-        # ODE = torch.stack([Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2], dim=1)
-        
-        loss_ode = torch.mean(Meal_1**2) + torch.mean(Meal_2**2) + torch.mean(Insulin1**2) + torch.mean(Insulin2**2) + torch.mean(Insulin3**2) + torch.mean(Glucose1**2 )+ torch.mean(Glucose2**2)
+        Insulin1 = I_sc_t - (u/(tau_1*C_I)) + (I_sc / tau_1)
+        Insulin2 = I_p_t - (I_sc / tau_2) + (I_p / tau_2)
+        Insulin3 = I_eff_t + p_2 * I_eff - p_2 * S_I * I_p
 
+        Glucose1 = G_t + (GEZI + I_eff) * G - EGP_0 - ((1000 * D_2) / (V_G * tau_m))
+        Glucose2 = G_sc_t - (G / tau_sc) + (G_sc / tau_sc)
+                
+        loss_ode =  (1/scaling_mean[0]*torch.mean((Meal_1)**2) + 
+                    1/scaling_mean[1]*torch.mean(Meal_2**2) + 
+                    1/scaling_mean[2]*torch.mean(Insulin1**2) + 
+                    1/scaling_mean[3]*torch.mean(Insulin2**2) + 
+                    1/scaling_mean[4]*torch.mean(Insulin3**2) + 
+                    1/scaling_mean[5]*torch.mean(Glucose1**2 )+ 
+                    1/scaling_mean[6]*torch.mean(Glucose2**2))
         return loss_ode
+        # return Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2
 
     def data_loss(self, t, data):
         X = self.forward(t)
@@ -173,11 +176,23 @@ class PINN(nn.Module):
 
         return data_loss
 
-    def loss(self, t_train, t_data, u, d, data):
-        loss1 = self.MVP(t_train, u, d)
-        loss2 = self.data_loss(t_data, data)
+    def loss(self, t_train, t_data, u, d, data, scaling_mean, scaling_std):
+        loss_ode = self.MVP(t_train, u, d, scaling_mean, scaling_std)
+        
+        # loss_ODE_std = [res.detach().norm() + 1e-6 for res in loss_ODE]  # Add a small value to avoid division by zero
+        # for val in loss_ODE:
+        #     print(val.max())
+        # return 0
 
-        return loss1 + loss2
+     # Normalize residuals and compute ODE loss
+        # loss_ode = sum(
+        #     torch.mean((res / std) ** 2)
+        #     for res, std in zip(loss_ODE, loss_ODE_std)
+        # )
+        
+        loss_data = self.data_loss(t_data, data)
+
+        return loss_ode, loss_data
 
 if __name__ == "__main__":
     # Check for CUDA availability
@@ -188,7 +203,7 @@ if __name__ == "__main__":
     num_hidden_layers = 3
 
     # Load data and pre-process
-    data = custom_csv_parser('Patient2.csv')
+    data = custom_csv_parser('../Patient2.csv')
     n_data = len(data["G"])
 
     # Split data into training and validation
@@ -225,15 +240,18 @@ if __name__ == "__main__":
     # Define the optimizer and scheduler
     
     S_I = torch.tensor([0.0], requires_grad=True, device=device)
-    optimizer = torch.optim.Adam(list(model.parameters()) + [S_I], lr=1e-3, weight_decay=1e-5)
+    GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
+
+    optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
     # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
    
     # Define number of epoch
-    num_epoch = 100000
+    num_epoch = 30000
 
     # Collocation points
+    ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
     num_train_col = n_train
     t_train = torch.linspace(0, T, num_train_col, requires_grad=True, device=device).reshape(-1, 1)
     d_train = torch.zeros(num_train_col, requires_grad=True, device=device)
@@ -248,6 +266,11 @@ if __name__ == "__main__":
     u_train = u_train.clone()
     u_train[bolus_indicies] += data["Bolus"][bolus_indicies]
 
+    # Try naive scaling
+    # 'D1', 'D2', 'I_sc', 'I_p', 'I_eff', 'G', 'G_sc'
+    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
+    scaling_std = torch.Tensor([data_train["D1"].std(), data_train["D2"].std(), data_train["I_sc"].std(), data_train["I_p"].std(), data_train["I_eff"].std(), data_train["G"].std(), data_train["G_sc"].std()])
+
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
@@ -256,7 +279,8 @@ if __name__ == "__main__":
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss = model.loss(t_train, t_train_data, u_train, d_train, data_train)
+        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean, scaling_std)
+        loss = loss_ode + loss_data
         loss.backward(retain_graph=True)
         optimizer.step()
         scheduler.step()
@@ -277,7 +301,9 @@ if __name__ == "__main__":
             # Print training and validation loss
         if epoch % 1000 == 0:
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
 
     
 
@@ -304,7 +330,7 @@ if __name__ == "__main__":
 
     # Third subplot for glucose predictions
     plt.subplot(1, 3, 3)
-    t_test = torch.linspace(0, T, 2500, device=device).reshape(-1, 1)
+    t_test = torch.linspace(0, T + 150, 2500, device=device).reshape(-1, 1)
     X_pred = model(t_test)
     G_pred = X_pred[:, 5].detach().cpu().numpy()
 
