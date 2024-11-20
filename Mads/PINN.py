@@ -106,7 +106,7 @@ class PINN(nn.Module):
         V_G = self.V_G
         tau_m = self.tau_m
         tau_sc = self.tau_sc
-        # S_I = self.S_I-
+        # S_I = self.S_I
         
         # Define gradients needed
         D_1_t = grad(D_1, t)
@@ -128,12 +128,12 @@ class PINN(nn.Module):
         Glucose1 = G_t + (GEZI + I_eff) * G - EGP_0 - ((1000 * D_2) / (V_G * tau_m))
         Glucose2 = G_sc_t - (G / tau_sc) + (G_sc / tau_sc)
                 
-        loss_ode =  (1/scaling_mean[0]*torch.mean((Meal_1)**2) + 
-                    1/scaling_mean[1]*torch.mean(Meal_2**2) + 
-                    1/scaling_mean[2]*torch.mean(Insulin1**2) + 
-                    1/scaling_mean[3]*torch.mean(Insulin2**2) + 
-                    1/scaling_mean[4]*torch.mean(Insulin3**2) + 
-                    1/scaling_mean[5]*torch.mean(Glucose1**2 )+ 
+        loss_ode = (1/scaling_mean[0]*torch.mean((Meal_1)**2)   + 
+                    1/scaling_mean[1]*torch.mean(Meal_2**2)     + 
+                    1/scaling_mean[2]*torch.mean(Insulin1**2)   + 
+                    1/scaling_mean[3]*torch.mean(Insulin2**2)   + 
+                    1/scaling_mean[4]*torch.mean(Insulin3**2)   + 
+                    1/scaling_mean[5]*torch.mean(Glucose1**2 )  + 
                     1/scaling_mean[6]*torch.mean(Glucose2**2))
         return loss_ode
         # return Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2
@@ -302,8 +302,8 @@ if __name__ == "__main__":
         if epoch % 1000 == 0:
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
-            # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
 
     
 
