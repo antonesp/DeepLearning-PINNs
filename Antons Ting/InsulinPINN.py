@@ -155,16 +155,16 @@ class PINN(nn.Module):
         ## Define the differential equations
 
         # Meal equations
-        eq_M1 = D1_t - (d - D1/tau_m)
-        eq_M2 =  D2_t - ( D1/tau_m-D2/tau_m )
+        eq_M1 = D1_t - d + D1/tau_m
+        eq_M2 =  D2_t -  D1/tau_m + D2/tau_m
 
         # Insulin equations
-        eq_I1 = I_sc_t - (u/(tau_1*C_I) - I_sc/tau_1)
-        eq_I2 = I_p_t - ( (I_sc-I_p)/tau_2 )
-        eq_I3 = I_eff_t - (-p_2*I_eff + p_2*S_I*I_p)
+        eq_I1 = I_sc_t - u/(tau_1*C_I) + I_sc/tau_1
+        eq_I2 = I_p_t - I_sc/tau_2 + I_p/tau_2
+        eq_I3 = I_eff_t + p_2*I_eff - p_2*S_I*I_p
 
         # Glucose equations
-        eq_G1 = G_t - (( GEZI + I_eff) * G + EGP_0 + 1000*D2/(V_G*tau_m) )
+        eq_G1 = G_t - ( G * (I_eff - GEZI)  + EGP_0 + 1000*D2/(V_G*tau_m) )
         eq_G2 = G_sc_t - ( (G - G_sc) / tau_sc )
 
         # Her kan du skalere ligningerne så alle oder har samme vægt. Det tror vi er vigtigt.
