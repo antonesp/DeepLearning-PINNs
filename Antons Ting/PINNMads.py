@@ -44,7 +44,7 @@ class PINN(nn.Module):
         self._initialize_weights()
 
         # Define activation function
-        self.activation = nn.SiLU()
+        self.activation = nn.Tanh()
 
         # Define patient parameters
         self.tau_1 = torch.tensor([49.0], requires_grad=True, device=device)       # [min]
@@ -75,7 +75,7 @@ class PINN(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def MVP(self, t, u, d, scaling_mean):
+    def MVP(self, t, u, d, scaling_mean, scaling_std):
         '''
         Input:
             x: Is the state tensor 
@@ -176,8 +176,20 @@ class PINN(nn.Module):
 
         return data_loss
 
-    def loss(self, t_train, t_data, u, d, data, scaling_mean):
-        loss_ode = self.MVP(t_train, u, d, scaling_mean)
+    def loss(self, t_train, t_data, u, d, data, scaling_mean, scaling_std):
+        loss_ode = self.MVP(t_train, u, d, scaling_mean, scaling_std)
+        
+        # loss_ODE_std = [res.detach().norm() + 1e-6 for res in loss_ODE]  # Add a small value to avoid division by zero
+        # for val in loss_ODE:
+        #     print(val.max())
+        # return 0
+
+     # Normalize residuals and compute ODE loss
+        # loss_ode = sum(
+        #     torch.mean((res / std) ** 2)
+        #     for res, std in zip(loss_ODE, loss_ODE_std)
+        # )
+        
         loss_data = self.data_loss(t_data, data)
 
         return loss_ode, loss_data
@@ -191,7 +203,7 @@ if __name__ == "__main__":
     num_hidden_layers = 3
 
     # Load data and pre-process
-    data = custom_csv_parser('../Patient2.csv')
+    data = custom_csv_parser('Patient2.csv')
     n_data = len(data["G"])
 
     # Split data into training and validation
@@ -205,12 +217,19 @@ if __name__ == "__main__":
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
 
+    # Define  
+    T = 300
+
+    t_data = torch.linspace(0, T, n_data, device=device)
+    t_train_data = t_data[train_indices].reshape(-1, 1)
+    t_val_data = t_data[val_indices].reshape(-1, 1)
+
     # Split the data dictionary 
     data_train = {}
     data_val = {}
 
     for key in data.keys():
-        data_tensor = torch.tensor(data[key], requires_grad=True, device=device)          # Ensure data is a tensor
+        data_tensor = torch.tensor(data[key], device=device)          # Ensure data is a tensor
         data_train[key] = data_tensor[train_indices]
         data_val[key] = data_tensor[val_indices]
 
@@ -223,8 +242,8 @@ if __name__ == "__main__":
     S_I = torch.tensor([0.0], requires_grad=True, device=device)
     GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
 
-    # optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
    
@@ -233,31 +252,34 @@ if __name__ == "__main__":
 
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
-    
-    d_train = data_train["Meal"]
-    d_val = data_val["Meal"]
-    
-    u_train = data_train["Insulin"]
-    u_val = data_val["Insulin"]
-    
-    t_train_data = data_train["t"].reshape(-1, 1)
-    t_val_data = data_val["t"].reshape(-1, 1)
-    
-    T = data["t"][-1]
-    t_train = torch.linspace(0, T, n_train, requires_grad=True, device=device).reshape(-1, 1)
-    
-    
+    num_train_col = n_train
+    t_train = torch.linspace(0, T, num_train_col, requires_grad=True, device=device).reshape(-1, 1)
+    d_train = torch.zeros(num_train_col, requires_grad=True, device=device)
+    u_train = data["Steady_insulin"][0] * torch.ones(num_train_col, requires_grad=True, device=device)
+
+    # Add a meal and insulin input
+    meal_indicies = 0
+    bolus_indicies = 0
+
+    d_train = d_train.clone()
+    d_train[meal_indicies] = data["Meal_size"][meal_indicies]
+    u_train = u_train.clone()
+    u_train[bolus_indicies] += data["Bolus"][bolus_indicies]
+
+    # Try naive scaling
+    # 'D1', 'D2', 'I_sc', 'I_p', 'I_eff', 'G', 'G_sc'
+    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
+    scaling_std = torch.Tensor([data_train["D1"].std(), data_train["D2"].std(), data_train["I_sc"].std(), data_train["I_p"].std(), data_train["I_eff"].std(), data_train["G"].std(), data_train["G_sc"].std()])
+
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
     learning_rates = []
 
-    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
-
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean)
+        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean, scaling_std)
         loss = loss_ode + loss_data
         loss.backward(retain_graph=True)
         optimizer.step()
@@ -281,7 +303,7 @@ if __name__ == "__main__":
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
-            print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}), S_I: {S_I.item():.6f}")
 
     
 
@@ -313,7 +335,7 @@ if __name__ == "__main__":
     G_pred = X_pred[:, 5].detach().cpu().numpy()
 
     plt.plot(t_test.cpu().numpy(), G_pred, label='Predicted Glucose (G)')
-    plt.plot(data["t"], data["G"], label='True Glucose (G)')
+    plt.plot(t_data.cpu().numpy(), data["G"], label='True Glucose (G)')
     plt.xlabel('Time (t)')
     plt.ylabel('Glucose Level')
     plt.title('Predicted vs True Glucose Levels')

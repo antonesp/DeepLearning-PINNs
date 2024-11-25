@@ -32,7 +32,7 @@ if device == 'cuda':
 # Parameters for equation
 
 def grad(function,var):
-    return autograd.grad(function, var, grad_outputs=torch.ones_like(function), create_graph=True,retain_graph=True)[0]
+    return autograd.grad(function, var, grad_outputs=torch.ones_like(function), create_graph=True)[0]
 
 
 
@@ -68,25 +68,32 @@ class PINN(nn.Module):
         # training
 
     def forward(self, x):
-        u = self.activation(self.input(t))
 
-        for hidden_layer in self.hidden:
-            u = self.activation(hidden_layer(u))
+        # if torch.is_tensor(t) != True:         
+        #     t = torch.from_numpy(t)                
+        # u = t.float()
+   
+        # for layer in self.linears:
+        #     u = self.activation(layer(u))
 
-        u = self.output(u)
-        return u
-        # if torch.is_tensor(x) != True:         
-        #     x = torch.from_numpy(x)                
-        # layer = x.float()
-        # for i in range(len(layers)-2):  
-        #     z = self.linears[i](layer)              
-        #     layer = self.activation(z)    
-        # layer = self.linears[-1](layer)
-        # return layer
+        # u = self.output(u)
+        # return u
+
+        if torch.is_tensor(x) != True:         
+            x = torch.from_numpy(x)                
+        layer = x.float()
+        for i in range(len(layers)-2):  
+            z = self.linears[i](layer)              
+            layer = self.activation(z)
+
+        layer = self.linears[-1](layer)
+        return layer
 
     # We are using a simple exponential equation to test the PINN
 
-    def LossData(self,X,t,data):
+    def LossData(self,t,data):
+
+        X = self.forward(t)
 
         D1 = X[:,0]
         D2 = X[:,1]
@@ -105,21 +112,23 @@ class PINN(nn.Module):
         G_sc_data = data["G_sc"]
 
 
-        loss_D1 = torch.mean((D1 - D1_data)**2)
-        loss_D2 = torch.mean((D2 - D2_data)**2)
+        loss_D1 = 1/torch.mean(D1_data) * torch.mean((D1 - D1_data)**2)
+        loss_D2 = 1/torch.mean(D2_data) * torch.mean((D2 - D2_data)**2)
 
-        loss_I_sc = torch.mean((I_sc - I_sc_data)**2)
-        loss_I_p = torch.mean((I_p - I_p_data)**2)
-        loss_I_eff = torch.mean((I_eff - I_eff_data)**2)
+        loss_I_sc =1/torch.mean(I_sc_data) * torch.mean((I_sc - I_sc_data)**2)
+        loss_I_p = 1/torch.mean(I_p_data) * torch.mean((I_p - I_p_data)**2)
+        loss_I_eff = 1/torch.mean(I_eff_data) * torch.mean((I_eff - I_eff_data)**2)
 
-        loss_G = torch.mean((G - G_data)**2)
-        loss_G_sc = torch.mean((G_sc - G_sc_data)**2)
+        loss_G = 1/torch.mean(G_data)* torch.mean((G - G_data)**2)
+        loss_G_sc = 1/torch.mean(G_sc_data)* torch.mean((G_sc - G_sc_data)**2)
 
         # You should also scale the loss here so that all the losses have the same weight.
         loss_data = loss_D1 + loss_D2 + loss_I_sc + loss_I_p + loss_I_eff + loss_G + loss_G_sc
         return loss_data
 
-    def LossPDE(self,X,t,data):
+    def LossPDE(self,t,data):
+
+        X = self.forward(t)
 
         u = data["Steady_insulin"]
         u[0] += data["Bolus"][0]
@@ -161,16 +170,16 @@ class PINN(nn.Module):
         ## Define the differential equations
 
         # Meal equations
-        eq_M1 = D1_t - d + D1/tau_m
-        eq_M2 =  D2_t -  D1/tau_m + D2/tau_m
+        eq_M1 = D1_t - (d - D1/tau_m)
+        eq_M2 =  D2_t -  ((D1- D2) /tau_m)
 
         # Insulin equations
-        eq_I1 = I_sc_t - u/(tau_1*C_I) + I_sc/tau_1
-        eq_I2 = I_p_t - I_sc/tau_2 + I_p/tau_2
-        eq_I3 = I_eff_t + p_2*I_eff - p_2*S_I*I_p
+        eq_I1 = I_sc_t - ( u/(tau_1*C_I) - I_sc/tau_1 )
+        eq_I2 = I_p_t - ( (I_sc-I_p) /tau_2)
+        eq_I3 = I_eff_t - ( -p_2*I_eff + p_2*S_I*I_p )
 
         # Glucose equations
-        eq_G1 = G_t - ( G * (I_eff - GEZI)  + EGP_0 + 1000*D2/(V_G*tau_m) )
+        eq_G1 = G_t - ( - G * (I_eff + GEZI)  + EGP_0 + 1000*D2/(V_G*tau_m) )
         eq_G2 = G_sc_t - ( (G - G_sc) / tau_sc )
 
         # Her kan du skalere ligningerne så alle oder har samme vægt. Det tror vi er vigtigt.
@@ -179,9 +188,8 @@ class PINN(nn.Module):
         return loss_PDE
         
     def LossComb(self,t,data):
-        X = self.forward(t)
-        loss_data = self.LossData(t,X,data)
-        loss_pde = self.LossPDE(t,X,data)
+        loss_data = self.LossData(t,data)
+        loss_pde = self.LossPDE(t,data)
 
         # print("bc data type: ",type(loss_bc))
         # print("pde data type: ",type(loss_pde))
@@ -192,8 +200,8 @@ class PINN(nn.Module):
 
 if __name__ == "__main__":
 
-    layers = np.array([1,128,128,128,7])
-    starting_guess = 0.01
+    layers = np.array([1,64,64,7])
+    starting_guess = 0.05
 
     ## Load data
 
@@ -207,7 +215,7 @@ if __name__ == "__main__":
 
     indices = torch.randperm(n_data)
 
-    n_train = int(n_data * 0.1)   # 80% training data
+    n_train = int(n_data * 0.5)   # 50% training data
 
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
@@ -235,25 +243,29 @@ if __name__ == "__main__":
 
     numb_of_epochs = 10000
 
-    optimizer = torch.optim.Adam(PINN.parameters(), lr=0.005)
+    optimizer = torch.optim.Adam(PINN.parameters(), lr=0.001)
 
-    print(PINN.parameters())
-
+ 
     # 
 
     for epoch in range(numb_of_epochs):
-        optimizer.zero_grad()
-        loss = PINN.LossComb(t_train_data, data_train)
-        loss.backward(retain_graph=True)
+        # optimizer.zero_grad()
+        
+        loss_ODE = PINN.LossPDE(t_train_data, data_train)
+        loss_Data = PINN.LossData(t_train_data, data_train)
+        loss = loss_ODE + loss_Data
+        loss.backward()
+        # loss.backward(etain_graph=True)
         optimizer.step()
 
-        if epoch % 100 == 0:
+        if epoch % 200 == 0:
 
             with torch.no_grad():
                 PINN.eval()
                 val_loss = PINN.LossData(t_val_data, data_val)
+                PINN.train()
 
-            print(f"Epoch {epoch}, Trainning Loss: {loss.item():.6f}, Validation Loss: {val_loss.item():.6f} Estimated S_I: {PINN.S_I.item():.6f}, PDE Loss: {PINN.LossPDE(t_train_data, data_train).item():.6f}, Data Loss: {PINN.LossData(t_train_data, data_train).item():.6f}")
+            print(f"Epoch {epoch}, Trainning Loss: {loss.item():.6f}, Validation Loss: {val_loss.item():.6f} Estimated S_I: {PINN.S_I.item():.6f}, ODE Loss: {loss_ODE}, Data Loss: {loss_Data}")
 
 
 
