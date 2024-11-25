@@ -56,7 +56,7 @@ class PINN(nn.Module):
         self.V_G = nn.Parameter(torch.tensor([253.0], device=device))        # [dL]
         self.tau_m = nn.Parameter(torch.tensor([47.0], device=device))       # [min]
         self.tau_sc = nn.Parameter(torch.tensor([5.0], device=device))       # [min]
-        self.S_I = nn.Parameter(torch.tensor([0.0081], device=device))
+        # self.S_I = nn.Parameter(torch.tensor([0.0081], device=device))
         
     def forward(self, t):
         u = self.activation(self.input(t))
@@ -127,7 +127,7 @@ class PINN(nn.Module):
         V_G = self.V_G
         tau_m = self.tau_m
         tau_sc = self.tau_sc
-        S_I = self.S_I
+        # S_I = self.S_I
         
         # Define gradients needed
         D_1_t = grad(D_1, t)
@@ -263,12 +263,13 @@ if __name__ == "__main__":
     GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
 
     # optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(list(model.parameters()) + [S_I], lr=1e-3, weight_decay=1e-5)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
    
     # Define number of epoch
-    num_epoch = 30000
+    num_epoch = 5000
 
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
@@ -290,6 +291,7 @@ if __name__ == "__main__":
     train_losses = []
     val_losses = []
     learning_rates = []
+    S_I_pred =[]
 
     # Begin training our model
     for epoch in range(num_epoch):
@@ -312,13 +314,14 @@ if __name__ == "__main__":
             train_losses.append(loss.item())
             val_losses.append(val_loss.item())
             learning_rates.append(current_lr)
+            S_I_pred.append(S_I.item())
 
             # Print training and validation loss
         if epoch % 1000 == 0:
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
             # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
-            # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Loss data: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
 
     
 
@@ -326,7 +329,7 @@ if __name__ == "__main__":
     plt.figure(figsize=(18, 5))
 
     # First subplot for losses
-    plt.subplot(1, 3, 1)
+    plt.subplot(2, 2, 1)
     epochs = range(0, num_epoch, 100)  # Since we record losses every 100 epochs
     plt.plot(epochs, train_losses, label='Training Loss')
     plt.plot(epochs, val_losses, label='Validation Loss')
@@ -336,7 +339,7 @@ if __name__ == "__main__":
     plt.legend()
 
     # Second subplot for learning rate
-    plt.subplot(1, 3, 2)
+    plt.subplot(2, 2, 2)
     plt.plot(epochs, learning_rates, label='Learning Rate', color='green')
     plt.xlabel('Epoch')
     plt.ylabel('Learning Rate')
@@ -344,7 +347,7 @@ if __name__ == "__main__":
     plt.legend()
 
     # Third subplot for glucose predictions
-    plt.subplot(1, 3, 3)
+    plt.subplot(2, 2, 3)
     t_test = torch.linspace(0, 299.9, 2500, device=device).reshape(-1, 1)
     X_pred = model(t_test)
     G_pred = X_pred[:, 5].detach().cpu().numpy()
@@ -357,6 +360,14 @@ if __name__ == "__main__":
     plt.xlabel('Time (t)')
     plt.ylabel('Glucose Level')
     plt.title('Predicted vs True Glucose Levels')
+    plt.legend()
+    
+    plt.subplot(2, 2, 4)
+    plt.plot(epochs, S_I_pred, label='Predicted value for S_I')
+    plt.axhline(y=0.0081, label='True value for S_I', color="orange")
+    plt.xlabel('Epoch')
+    plt.ylabel('Value for S_I')
+    plt.title('Prediction of S_I value')
     plt.legend()
 
     plt.tight_layout()
