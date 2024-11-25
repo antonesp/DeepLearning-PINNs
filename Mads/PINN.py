@@ -217,19 +217,12 @@ if __name__ == "__main__":
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
 
-    # Define  
-    T = 300
-
-    t_data = torch.linspace(0, T, n_data, device=device)
-    t_train_data = t_data[train_indices].reshape(-1, 1)
-    t_val_data = t_data[val_indices].reshape(-1, 1)
-
     # Split the data dictionary 
     data_train = {}
     data_val = {}
 
     for key in data.keys():
-        data_tensor = torch.tensor(data[key], device=device)          # Ensure data is a tensor
+        data_tensor = torch.tensor(data[key], requires_grad=True, device=device)          # Ensure data is a tensor
         data_train[key] = data_tensor[train_indices]
         data_val[key] = data_tensor[val_indices]
 
@@ -242,8 +235,8 @@ if __name__ == "__main__":
     S_I = torch.tensor([0.0], requires_grad=True, device=device)
     GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
 
-    optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+    # optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
    
@@ -252,25 +245,20 @@ if __name__ == "__main__":
 
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
-    num_train_col = n_train
-    t_train = torch.linspace(0, T, num_train_col, requires_grad=True, device=device).reshape(-1, 1)
-    d_train = torch.zeros(num_train_col, requires_grad=True, device=device)
-    u_train = data["Steady_insulin"][0] * torch.ones(num_train_col, requires_grad=True, device=device)
-
-    # Add a meal and insulin input
-    meal_indicies = 0
-    bolus_indicies = 0
-
-    d_train = d_train.clone()
-    d_train[meal_indicies] = data["Meal_size"][meal_indicies]
-    u_train = u_train.clone()
-    u_train[bolus_indicies] += data["Bolus"][bolus_indicies]
-
-    # Try naive scaling
-    # 'D1', 'D2', 'I_sc', 'I_p', 'I_eff', 'G', 'G_sc'
-    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
-    scaling_std = torch.Tensor([data_train["D1"].std(), data_train["D2"].std(), data_train["I_sc"].std(), data_train["I_p"].std(), data_train["I_eff"].std(), data_train["G"].std(), data_train["G_sc"].std()])
-
+    
+    d_train = data_train["Meal"]
+    d_val = data_val["Meal"]
+    
+    u_train = data_train["Insulin"]
+    u_val = data_val["Insulin"]
+    
+    t_train_data = data_train["t"].reshape(-1, 1)
+    t_val_data = data_val["t"].reshape(-1, 1)
+    
+    T = data["t"][-1]
+    t_train = torch.linspace(0, T, n_train, requires_grad=True, device=device).reshape(-1, 1)
+    
+    
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
