@@ -75,7 +75,7 @@ class PINN(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def MVP(self, t, u, d, scaling_mean, scaling_std):
+    def MVP(self, t, u, d, scaling_mean):
         '''
         Input:
             x: Is the state tensor 
@@ -176,20 +176,8 @@ class PINN(nn.Module):
 
         return data_loss
 
-    def loss(self, t_train, t_data, u, d, data, scaling_mean, scaling_std):
-        loss_ode = self.MVP(t_train, u, d, scaling_mean, scaling_std)
-        
-        # loss_ODE_std = [res.detach().norm() + 1e-6 for res in loss_ODE]  # Add a small value to avoid division by zero
-        # for val in loss_ODE:
-        #     print(val.max())
-        # return 0
-
-     # Normalize residuals and compute ODE loss
-        # loss_ode = sum(
-        #     torch.mean((res / std) ** 2)
-        #     for res, std in zip(loss_ODE, loss_ODE_std)
-        # )
-        
+    def loss(self, t_train, t_data, u, d, data, scaling_mean):
+        loss_ode = self.MVP(t_train, u, d, scaling_mean)
         loss_data = self.data_loss(t_data, data)
 
         return loss_ode, loss_data
@@ -264,10 +252,12 @@ if __name__ == "__main__":
     val_losses = []
     learning_rates = []
 
+    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
+
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean, scaling_std)
+        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean)
         loss = loss_ode + loss_data
         loss.backward(retain_graph=True)
         optimizer.step()
