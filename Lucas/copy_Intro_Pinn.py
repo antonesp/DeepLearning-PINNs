@@ -1,3 +1,4 @@
+#%%
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -56,12 +57,12 @@ class PINN(nn.Module):
         loss_ode = torch.mean(ode**2)
 
         # Define the initial condition loss
-        initial_t = torch.zeros(1, device=t.device).reshape(-1, 1)
+        initial_t = torch.zeros(100, device=t.device).reshape(-1, 1)
         initial_condition = self.forward(initial_t) - 1.0
         loss_ics = torch.mean(initial_condition**2)
         
         # Define the data loss
-        t_observed = torch.linspace(0, 5, 25, device=t.device).reshape(-1, 1)
+        t_observed = torch.linspace(0, 1, 10, device=t.device).reshape(-1, 1)
         u_observed = torch.exp(true_coef * t_observed)  # Expected y values for given t points
         u_pred = self.forward(t_observed)
         loss_data = torch.mean((u_pred - u_observed)**2)
@@ -76,30 +77,30 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define our model
-    model = PINN(num_hidden=2, hidden_dim=30).to(device)
+    model = PINN(num_hidden=2, hidden_dim=60).to(device)
 
     # Define our parameter we want to estimate with initial guess
-    a = torch.tensor([2.0], requires_grad=True, device=device)
+    a = torch.tensor([1.0], requires_grad=True, device=device)
     true_a = torch.tensor([3.0], requires_grad=True, device=device)
 
     # Add the parameter to our optimizer
     optimizer = torch.optim.Adam(list(model.parameters()) + [a], lr=0.001)
     
     # Define the training t data, collocation points
-    t_train = torch.linspace(0, 5, 100, requires_grad=True, device=device).reshape(-1, 1)
+    t_train = torch.linspace(0, 1, 100, requires_grad=True, device=device).reshape(-1, 1)
     
     # Can also be done with random numbers
     # t_train = torch.rand(100, 1, requires_grad=True, device=device)
 
     # Define number of epoch
-    num_epoch = 30000
+    num_epoch = 10000
 
     # Enable interactive mode for live plotting
     plt.ion()
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Create the testing
-    t_test = torch.linspace(0, 5, 100, device=device).reshape(-1, 1)
+    t_test = torch.linspace(0, 1, 100, device=device).reshape(-1, 1)
     y_pred = model(t_test).detach().cpu().numpy()
     
     t_vals = t_test.detach().cpu().numpy()
@@ -124,12 +125,15 @@ if __name__ == "__main__":
             ax.set_xlabel("Time $t$")
             ax.set_ylabel("$y(t)$")
             ax.set_title(f"PINN Solution vs Exact Solution\nEstimated a: {a.item():.4f}, Epoch: {epoch}")
+            
             ax.legend()
             ax.grid(True)
-            plt.pause(0.01)  # Pause to update the figure ax.clear()  # Clear previous plots
-            ax.clear()
+            plt.pause(0.01)   #Pause to update the figure 
+            ax.clear()  # Clear previous plots
+            plt.savefig("PINN.png")
            
 
     # Turn off interactive mode and show the final plot
+    
     plt.ioff()
     plt.show()
