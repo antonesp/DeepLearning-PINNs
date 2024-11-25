@@ -44,7 +44,7 @@ class PINN(nn.Module):
         self._initialize_weights()
 
         # Define activation function
-        self.activation = nn.Tanh()
+        self.activation = nn.SiLU()
 
         # Define patient parameters
         self.tau_1 = torch.tensor([49.0], requires_grad=True, device=device)       # [min]
@@ -335,7 +335,7 @@ if __name__ == "__main__":
     G_pred = X_pred[:, 5].detach().cpu().numpy()
 
     plt.plot(t_test.cpu().numpy(), G_pred, label='Predicted Glucose (G)')
-    plt.plot(t_data.cpu().numpy(), data["G"], label='True Glucose (G)')
+    plt.plot(data["t"], data["G"], label='True Glucose (G)')
     plt.xlabel('Time (t)')
     plt.ylabel('Glucose Level')
     plt.title('Predicted vs True Glucose Levels')
