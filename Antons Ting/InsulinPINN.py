@@ -68,19 +68,26 @@ class PINN(nn.Module):
         # training
 
     def forward(self, x):
-        if torch.is_tensor(x) != True:         
-            x = torch.from_numpy(x)                
-        layer = x.float()
-        for i in range(len(layers)-2):  
-            z = self.linears[i](layer)              
-            layer = self.activation(z)    
-        layer = self.linears[-1](layer)
-        return layer
+        u = self.activation(self.input(t))
+
+        for hidden_layer in self.hidden:
+            u = self.activation(hidden_layer(u))
+
+        u = self.output(u)
+        return u
+        # if torch.is_tensor(x) != True:         
+        #     x = torch.from_numpy(x)                
+        # layer = x.float()
+        # for i in range(len(layers)-2):  
+        #     z = self.linears[i](layer)              
+        #     layer = self.activation(z)    
+        # layer = self.linears[-1](layer)
+        # return layer
 
     # We are using a simple exponential equation to test the PINN
 
-    def LossData(self,t,data):
-        X = self.forward(t)
+    def LossData(self,X,t,data):
+
         D1 = X[:,0]
         D2 = X[:,1]
         I_sc = X[:,2]
@@ -112,14 +119,13 @@ class PINN(nn.Module):
         loss_data = loss_D1 + loss_D2 + loss_I_sc + loss_I_p + loss_I_eff + loss_G + loss_G_sc
         return loss_data
 
-    def LossPDE(self,t,data):
+    def LossPDE(self,X,t,data):
 
         u = data["Steady_insulin"]
         u[0] += data["Bolus"][0]
         d = torch.zeros_like(t)
         d[0] = data["Meal_size"][0]
 
-        X = self.forward(t)
 
         D1 = X[:,0]
         D2 = X[:,1]
@@ -173,8 +179,9 @@ class PINN(nn.Module):
         return loss_PDE
         
     def LossComb(self,t,data):
-        loss_data = self.LossData(t,data)
-        loss_pde = self.LossPDE(t,data)
+        X = self.forward(t)
+        loss_data = self.LossData(t,X,data)
+        loss_pde = self.LossPDE(t,X,data)
 
         # print("bc data type: ",type(loss_bc))
         # print("pde data type: ",type(loss_pde))
