@@ -48,3 +48,48 @@ def custom_csv_parser(file_path, Training=True):
 # train_data = custom_csv_parser(file_path = '../Patient.csv')
 # # Load the test data
 # test_data = custom_csv_parser(file_path = '../Patient.csv', Training=False)
+
+import csv
+
+
+def custom_csv_parser2(file_path):
+    # Open the file and parse it as a CSV file
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file)
+        
+        headers = next(reader)  # Read header row for the keys
+        
+        # Initialize a dictionary with keys from headers and empty lists for values
+        data = {key: [] for key in headers}
+
+        # Populate the dictionary with values
+        for row in reader:
+            for key, value in zip(headers, row):
+                data[key].append(float(value))  # Convert values to float
+
+    return data
+import numpy as np
+
+def data_split(data, seed = 42, train_frac = 0.15):
+    # Set the random seed
+    np.random.seed(seed)
+    step_time = 0.1
+    ts = [step_time*i for i in range(len(data['D1']))]
+    # Split dataset into training set and test set
+    train_size = int(len(data['D1']) * train_frac)
+    train_idx = np.random.choice(len(data['D1']), train_size, replace=False).astype(int)
+    test_idx = np.array([i for i in range(len(data['D1'])) if i not in train_idx]).astype(int)
+    # Sort the indices
+    train_idx = np.sort(train_idx).astype(int)
+    test_idx = np.sort(test_idx).astype(int)
+
+    # Split
+    X_train, X_test = {}, {}
+    for key in data.keys():
+        data[key] = np.array(data[key])
+        X_train[key] = data[key][train_idx]
+        X_test[key] = data[key][test_idx]
+    ts_train = np.array(ts)[train_idx]
+    ts_test = np.array(ts)[test_idx]
+
+    return X_train, X_test, ts_train, ts_test, ts
