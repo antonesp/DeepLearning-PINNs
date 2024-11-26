@@ -73,8 +73,8 @@ import numpy as np
 def data_split(data, seed = 42, train_frac = 0.15):
     # Set the random seed
     np.random.seed(seed)
-    step_time = 0.1
-    ts = [step_time*i for i in range(len(data['D1']))]
+    ts = data['t']
+    ts = [t for t in range(len(ts))]
     # Split dataset into training set and test set
     train_size = int(len(data['D1']) * train_frac)
     train_idx = np.random.choice(len(data['D1']), train_size, replace=False).astype(int)
@@ -85,11 +85,15 @@ def data_split(data, seed = 42, train_frac = 0.15):
 
     # Split
     X_train, X_test = {}, {}
-    for key in data.keys():
+    X_train_arr = np.zeros((len(train_idx), 7))
+    X_test_arr = np.zeros((len(test_idx), 7))
+    for i, key in enumerate(['D1', 'D2', 'I_sc','I_p', 'I_eff', 'G', 'G_sc']):
         data[key] = np.array(data[key])
         X_train[key] = data[key][train_idx]
         X_test[key] = data[key][test_idx]
+        X_test_arr[:, i] = data[key][test_idx]
+        X_train_arr[:, i] = data[key][train_idx]
     ts_train = np.array(ts)[train_idx]
     ts_test = np.array(ts)[test_idx]
 
-    return X_train, X_test, ts_train, ts_test, ts
+    return X_train, X_test, ts_train, ts_test, ts, X_train_arr, X_test_arr
