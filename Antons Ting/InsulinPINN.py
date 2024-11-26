@@ -288,16 +288,6 @@ if __name__ == "__main__":
                 y_exact = data_val["G"].detach().cpu().numpy
                 y_pred = PINN.forward(t_val_data)["G"].detach().cpu().numpy()
 
-                ax.plot(t_plot, y_exact, label="Exact Solution $y(t) = e^{3t}$", linestyle="--")
-                ax.plot(t_plot, y_pred, label="PINN Approximation", linestyle="-")
-                ax.set_xlabel("Time $t$")
-                ax.set_ylabel("$y(t)$")
-                ax.set_title(f"PINN Solution vs Exact Solution\nEstimated a: {PINN.S_i.item():.4f}, Epoch: {epoch}")
-                ax.legend()
-                ax.grid(True)
-                plt.pause(0.01)  # Pause to update the figure ax.clear()  # Clear previous plots
-                # ax.clear()
-           
 
                 # plt.plot(data["t"], data["G"])
                 # plt.plot(data_train["t"].detach().cpu().numpy(),data_train["G"].detach().cpu().numpy(),"o",color="red")
