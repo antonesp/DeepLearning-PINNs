@@ -13,6 +13,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.ticker
 from sklearn.model_selection import train_test_split
+from torch.optim.lr_scheduler import StepLR
+import matplotlib.pyplot as plt
 
 import numpy as np
 import time
@@ -46,8 +48,9 @@ class PINN(nn.Module):
         # self.input = nn.Linear(1, 20)
         # self.hidden = nn.Linear(20, 20)
         # self.out = nn.Linear(20, 1)
-
+        
         self.activation = nn.Tanh()
+        self._initialize_weights()
         self.linears = nn.ModuleList([nn.Linear(layers[i], layers[i+1]) for i in range(len(layers)-1)]) 
 
         self.tau_1 = torch.tensor([49.0], requires_grad=True, device=device)       # [min]
@@ -89,6 +92,13 @@ class PINN(nn.Module):
         layer = self.linears[-1](layer)
         return layer
 
+    def _initialize_weights(self):
+        # Initialize weights using Xavier initialization and biases to zero
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
     # We are using a simple exponential equation to test the PINN
 
     def LossData(self,t,data):
@@ -130,10 +140,8 @@ class PINN(nn.Module):
 
         X = self.forward(t)
 
-        u = data["Steady_insulin"]
-        u[0] += data["Bolus"][0]
-        d = torch.zeros_like(t)
-        d[0] = data["Meal_size"][0]
+        u = data["Insulin"]
+        d = data["Meal"]
 
 
         D1 = X[:,0]
@@ -200,8 +208,8 @@ class PINN(nn.Module):
 
 if __name__ == "__main__":
 
-    layers = np.array([1,64,64,7])
-    starting_guess = 0.05
+    layers = np.array([1,128,128,128,7])
+    starting_guess = 0.0
 
     ## Load data
 
@@ -215,17 +223,13 @@ if __name__ == "__main__":
 
     indices = torch.randperm(n_data)
 
-    n_train = int(n_data * 0.5)   # 50% training data
+    n_train = int(n_data * 0.1)   # 50% training data
 
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
 
     # Define  
     T = 300
-
-    t_data = torch.linspace(0, T, n_data, device=device,requires_grad=True)
-    t_train_data = t_data[train_indices].reshape(-1, 1)
-    t_val_data = t_data[val_indices].reshape(-1, 1)
 
 
     # Split the data dictionary 
@@ -236,27 +240,39 @@ if __name__ == "__main__":
         data_tensor = torch.tensor(data[key], device=device,requires_grad=True)          # Ensure data is a tensor
         data_train[key] = data_tensor[train_indices]
         data_val[key] = data_tensor[val_indices]
+    
 
 
+    t_train_data = data_train["t"].reshape(-1, 1)
+    t_val_data = data_val["t"].reshape(-1, 1)
+
+    # plt.plot(data["t"], data["G"])
+    # plt.plot(data_train["t"].detach().cpu().numpy(),data_train["G"].detach().cpu().numpy(),"o",color="red")
+    # plt.plot(data_val["t"].detach().cpu().numpy(),data_val["G"].detach().cpu().numpy(),"o",color="blue")
+    # plt.show()
 
     PINN = PINN(layers,starting_guess).to(device)
 
-    numb_of_epochs = 10000
+    numb_of_epochs = 5000
 
-    optimizer = torch.optim.Adam(PINN.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(PINN.parameters(), lr=0.0001,weight_decay=5e-5)
+    scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
 
- 
+    plt.ion()
+    fig, ax = plt.subplots(figsize=(10, 6))
+
     # 
 
     for epoch in range(numb_of_epochs):
-        # optimizer.zero_grad()
+        optimizer.zero_grad()
         
         loss_ODE = PINN.LossPDE(t_train_data, data_train)
         loss_Data = PINN.LossData(t_train_data, data_train)
         loss = loss_ODE + loss_Data
-        loss.backward()
+        loss.backward(retain_graph=True)
         # loss.backward(etain_graph=True)
         optimizer.step()
+        scheduler.step()
 
         if epoch % 200 == 0:
 
@@ -265,10 +281,31 @@ if __name__ == "__main__":
                 val_loss = PINN.LossData(t_val_data, data_val)
                 PINN.train()
 
-            print(f"Epoch {epoch}, Trainning Loss: {loss.item():.6f}, Validation Loss: {val_loss.item():.6f} Estimated S_I: {PINN.S_I.item():.6f}, ODE Loss: {loss_ODE}, Data Loss: {loss_Data}")
+            print(f"Epoch {epoch}, Trainning Loss: {loss.item():.2f}, Validation Loss: {val_loss.item():.6f} Estimated S_I: {PINN.S_I.item():.6f}, ODE Loss: {loss_ODE:.6f}, Data Loss: {loss_Data:.6f}")
+
+            if epoch % 1000 == 0 & epoch != 0:
+                t_plot = t_val_data.detach().cpu().numpy()
+                y_exact = data_val["G"].detach().cpu().numpy
+                y_pred = PINN.forward(t_val_data)["G"].detach().cpu().numpy()
 
 
+                # plt.plot(data["t"], data["G"])
+                # plt.plot(data_train["t"].detach().cpu().numpy(),data_train["G"].detach().cpu().numpy(),"o",color="red")
+                # plt.plot(data_val["t"].detach().cpu().numpy(),data_val["G"].detach().cpu().numpy(),"o",color="blue")
+                # plt.show()
+                
 
+
+    # Plot the results
+    # with torch.no_grad():
+    #     PINN.eval()
+    #     X_test = PINN.forward(t_test).cpu().numpy()
+
+    #     plt.plot(t_test.cpu().numpy(), X_test[:,5], label="D1")
+    #     # add the true data to the plot
+    #     plt.plot(data["t"], data["G"], label="True D1")
+    #     plt.legend()
+    #     plt.show()
 
 
 
