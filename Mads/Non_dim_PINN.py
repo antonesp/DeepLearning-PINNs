@@ -26,7 +26,7 @@ def grad(func, var):
     Returns:
     torch.Tensor: Gradient of func with respect to var
     '''
-    return torch.autograd.grad(func, var, grad_outputs=torch.ones_like(func), create_graph=True)[0] 
+    return torch.autograd.grad(func, var, grad_outputs=torch.ones_like(func), create_graph=True, retain_graph=True)[0] 
 
 class PINN(nn.Module):
     
@@ -56,7 +56,7 @@ class PINN(nn.Module):
         self.V_G = nn.Parameter(torch.tensor([253.0], device=device))        # [dL]
         self.tau_m = nn.Parameter(torch.tensor([47.0], device=device))       # [min]
         self.tau_sc = nn.Parameter(torch.tensor([5.0], device=device))       # [min]
-        # self.S_I = nn.Parameter(torch.tensor([0.0081], device=device))
+        self.S_I = nn.Parameter(torch.tensor([0.0081], device=device))
         
     def forward(self, t):
         u = self.activation(self.input(t))
@@ -83,23 +83,23 @@ class PINN(nn.Module):
         
         # Known scaling params:
         # TODO: change how it is implemented
-        # D_1s = 47.0
-        # D_2s = 47.0
-        # I_scs = 0.0477
-        # I_ps = 0.0477
-        # I_effs = 0.0000193
-        # G_s = 454.54
-        # G_scs = 4272.676
-        # t_s = 47.0
+        D_1s = 47.0
+        D_2s = 47.0
+        I_scs = 0.0477
+        I_ps = 0.0477
+        I_effs = 0.0000193
+        G_s = 454.54
+        G_scs = 4272.676
+        t_s = 47.0
         
-        D_1s = 27.264
-        D_2s = 15.815
-        I_scs = 0.0277
-        I_ps = 0.0161
-        I_effs = 0.0000376
-        G_s = 36.261
-        G_scs = 197.729
-        t_s = 27.264
+        # D_1s = 27.264
+        # D_2s = 15.815
+        # I_scs = 0.0277
+        # I_ps = 0.0161
+        # I_effs = 0.0000376
+        # G_s = 36.261
+        # G_scs = 197.729
+        # t_s = 27.264
         
         
         # Calculate the state vector
@@ -127,7 +127,7 @@ class PINN(nn.Module):
         V_G = self.V_G
         tau_m = self.tau_m
         tau_sc = self.tau_sc
-        # S_I = self.S_I
+        S_I = self.S_I
         
         # Define gradients needed
         D_1_t = grad(D_1, t)
@@ -162,23 +162,23 @@ class PINN(nn.Module):
 
     def data_loss(self, t, data):
         X = self.forward(t)
-        # D_1s = 47.0
-        # D_2s = 47.0
-        # I_scs = 0.0477
-        # I_ps = 0.0477
-        # I_effs = 0.0000193
-        # G_s = 454.54
-        # G_scs = 4272.676
-        # t_s = 47.0
+        D_1s = 47.0
+        D_2s = 47.0
+        I_scs = 0.0477
+        I_ps = 0.0477
+        I_effs = 0.0000193
+        G_s = 454.54
+        G_scs = 4272.676
+        t_s = 47.0
         
-        D_1s = 27.264
-        D_2s = 15.815
-        I_scs = 0.0277
-        I_ps = 0.0161
-        I_effs = 0.0000376
-        G_s = 36.261
-        G_scs = 197.729
-        t_s = 27.264
+        # D_1s = 27.264
+        # D_2s = 15.815
+        # I_scs = 0.0277
+        # I_ps = 0.0161
+        # I_effs = 0.0000376
+        # G_s = 36.261
+        # G_scs = 197.729
+        # t_s = 27.264
 
         # Meal system
         D_1 = X[:, 0] * D_1s
@@ -219,18 +219,20 @@ class PINN(nn.Module):
         loss_ode = self.MVP(t_train, u, d)
         loss_data = self.data_loss(t_data, data)
 
-        return loss_ode, loss_data
+        loss = loss_ode + loss_data
+
+        return loss, loss_ode, loss_data
 
 if __name__ == "__main__":
     # Check for CUDA availability
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    print("Your device is: ", device)
     # Define our model parameters
     hidden_dim = 256
     num_hidden_layers = 2
 
     # Load data and pre-process
-    data = custom_csv_parser('../Patient2.csv')
+    data = custom_csv_parser('Patient2.csv')
     n_data = len(data["G"])
 
     # Split data into training and validation
@@ -249,7 +251,7 @@ if __name__ == "__main__":
     data_val = {}
 
     for key in data.keys():
-        data_tensor = torch.tensor(data[key], requires_grad=True, device=device)          # Ensure data is a tensor
+        data_tensor = torch.tensor(data[key], device=device)          # Ensure data is a tensor
         data_train[key] = data_tensor[train_indices]
         data_val[key] = data_tensor[val_indices]
 
@@ -259,17 +261,17 @@ if __name__ == "__main__":
 
     # Define the optimizer and scheduler
     
-    S_I = torch.tensor([0.0], requires_grad=True, device=device)
-    GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
+    # S_I = torch.tensor([0.0], requires_grad=True, device=device)
+    # GEZI = torch.tensor([0.0], requires_grad=True,device=device)      # [min^(-1)]
 
     # optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
-    optimizer = torch.optim.Adam(list(model.parameters()) + [S_I], lr=1e-3, weight_decay=1e-5)
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
+    # optimizer = torch.optim.Adam(list(model.parameters()) + [S_I], lr=1e-3, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
 
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
    
     # Define number of epoch
-    num_epoch = 5000
+    num_epoch = 30000
 
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
@@ -296,9 +298,8 @@ if __name__ == "__main__":
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train)
-        loss = loss_ode + loss_data
-        loss.backward(retain_graph=True)
+        loss, loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train)
+        loss.backward()
         optimizer.step()
         scheduler.step()
         
@@ -320,8 +321,8 @@ if __name__ == "__main__":
         if epoch % 1000 == 0:
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
-            # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Loss data: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Loss Validation: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
 
     
 

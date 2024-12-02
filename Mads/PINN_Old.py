@@ -44,7 +44,7 @@ class PINN(nn.Module):
         self._initialize_weights()
 
         # Define activation function
-        self.activation = nn.SiLU()
+        self.activation = nn.Tanh()
 
         # Define patient parameters
         self.tau_1 = torch.tensor([49.0], requires_grad=True, device=device)       # [min]
@@ -75,7 +75,7 @@ class PINN(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def MVP(self, t, u, d, scaling_mean):
+    def MVP(self, t, u, d, scaling_mean, scaling_std):
         '''
         Input:
             x: Is the state tensor 
@@ -127,7 +127,7 @@ class PINN(nn.Module):
 
         Glucose1 = G_t + (GEZI + I_eff) * G - EGP_0 - ((1000 * D_2) / (V_G * tau_m))
         Glucose2 = G_sc_t - (G / tau_sc) + (G_sc / tau_sc)
-
+                
         loss_ode = (1/scaling_mean[0]*torch.mean((Meal_1)**2)   + 
                     1/scaling_mean[1]*torch.mean(Meal_2**2)     + 
                     1/scaling_mean[2]*torch.mean(Insulin1**2)   + 
@@ -164,22 +164,32 @@ class PINN(nn.Module):
         G_data = data["G"]
         G_sc_data = data["G_sc"]
 
-        n = len(t)
-
-        data_1 = torch.mean((D_1 - D1_data)**2) 
-        data_2 = torch.mean((D_2 - D2_data)**2) 
-        data_3 = torch.mean((I_sc - I_sc_data)**2) 
-        data_4 = torch.mean((I_p - I_p_data)**2) 
-        data_5 = torch.mean((I_eff - I_eff_data)**2) 
-        data_6 = torch.mean((G - G_data)**2) 
+        data_1 = torch.mean((D_1 - D1_data)**2)
+        data_2 = torch.mean((D_2 - D2_data)**2)
+        data_3 = torch.mean((I_sc - I_sc_data)**2)
+        data_4 = torch.mean((I_p - I_p_data)**2)
+        data_5 = torch.mean((I_eff - I_eff_data)**2)
+        data_6 = torch.mean((G - G_data)**2)
         data_7 = torch.mean((G_sc - G_sc_data)**2)
 
         data_loss = data_1 + data_2 + data_3 + data_4 + data_5 + data_6 + data_7
 
         return data_loss
 
-    def loss(self, t_train, t_data, u, d, data, scaling_mean):
-        loss_ode = self.MVP(t_train, u, d, scaling_mean)
+    def loss(self, t_train, t_data, u, d, data, scaling_mean, scaling_std):
+        loss_ode = self.MVP(t_train, u, d, scaling_mean, scaling_std)
+        
+        # loss_ODE_std = [res.detach().norm() + 1e-6 for res in loss_ODE]  # Add a small value to avoid division by zero
+        # for val in loss_ODE:
+        #     print(val.max())
+        # return 0
+
+     # Normalize residuals and compute ODE loss
+        # loss_ode = sum(
+        #     torch.mean((res / std) ** 2)
+        #     for res, std in zip(loss_ODE, loss_ODE_std)
+        # )
+        
         loss_data = self.data_loss(t_data, data)
 
         return loss_ode, loss_data
@@ -189,8 +199,8 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define our model parameters
-    hidden_dim = 256
-    num_hidden_layers = 2
+    hidden_dim = 128
+    num_hidden_layers = 3
 
     # Load data and pre-process
     data = custom_csv_parser('Patient2.csv')
@@ -206,6 +216,13 @@ if __name__ == "__main__":
 
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
+
+    # Define  
+    T = 300
+
+    t_data = torch.linspace(0, T, n_data, device=device)
+    t_train_data = t_data[train_indices].reshape(-1, 1)
+    t_val_data = t_data[val_indices].reshape(-1, 1)
 
     # Split the data dictionary 
     data_train = {}
@@ -235,33 +252,41 @@ if __name__ == "__main__":
 
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
-    
-    d_train = data_train["Meal"]
-    d_val = data_val["Meal"]
-    
-    u_train = data_train["Insulin"]
-    u_val = data_val["Insulin"]
-    
-    t_train_data = data_train["t"].reshape(-1, 1)
-    t_val_data = data_val["t"].reshape(-1, 1)
-    
-    T = data["t"][-1]
-    t_train = torch.linspace(0, T, n_train, requires_grad=True, device=device).reshape(-1, 1)
-    
-    
+    # num_train_col = n_train
+    # t_train = torch.linspace(0, T, num_train_col, requires_grad=True, device=device).reshape(-1, 1)
+    # d_train = torch.zeros(num_train_col, requires_grad=True, device=device)
+    # u_train = data["Steady_insulin"][0] * torch.ones(num_train_col, requires_grad=True, device=device)
+    # print(data["Meal"])
+    d_train = data_train["Meal"].clone()
+    u_train = data_train["Insulin"].clone()
+    t_train = data_train["t"].clone().requires_grad_(True).reshape(-1, 1)
+
+
+    # Add a meal and insulin input
+    # meal_indicies = 0
+    # bolus_indicies = 0
+
+    # d_train = d_train.clone()
+    # d_train[meal_indicies] = data["Meal_size"][meal_indicies]
+    # u_train = u_train.clone()
+    # u_train[bolus_indicies] += data["Bolus"][bolus_indicies]
+
+    # Try naive scaling
+    # 'D1', 'D2', 'I_sc', 'I_p', 'I_eff', 'G', 'G_sc'
+    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
+    scaling_std = torch.Tensor([data_train["D1"].std(), data_train["D2"].std(), data_train["I_sc"].std(), data_train["I_p"].std(), data_train["I_eff"].std(), data_train["G"].std(), data_train["G_sc"].std()])
+
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
     learning_rates = []
 
-    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
-
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean)
+        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean, scaling_std)
         loss = loss_ode + loss_data
-        loss.backward()
+        loss.backward(retain_graph=True)
         optimizer.step()
         scheduler.step()
         
@@ -290,8 +315,8 @@ if __name__ == "__main__":
     # Plot training and validation losses and learning rate
     plt.figure(figsize=(18, 5))
 
-    # # First subplot for losses
-    plt.subplot(2, 4, 1)
+    # First subplot for losses
+    plt.subplot(1, 3, 1)
     epochs = range(0, num_epoch, 100)  # Since we record losses every 100 epochs
     plt.plot(epochs, train_losses, label='Training Loss')
     plt.plot(epochs, val_losses, label='Validation Loss')
@@ -301,60 +326,24 @@ if __name__ == "__main__":
     plt.legend()
 
     # Second subplot for learning rate
-    # plt.subplot(1, 3, 2)
-    # plt.plot(epochs, learning_rates, label='Learning Rate', color='green')
-    # plt.xlabel('Epoch')
-    # plt.ylabel('Learning Rate')
-    # plt.title('Learning Rate Schedule')
-    # plt.legend()
+    plt.subplot(1, 3, 2)
+    plt.plot(epochs, learning_rates, label='Learning Rate', color='green')
+    plt.xlabel('Epoch')
+    plt.ylabel('Learning Rate')
+    plt.title('Learning Rate Schedule')
+    plt.legend()
 
     # Third subplot for glucose predictions
-    plt.subplot(2, 4, 2)
-    t_test = torch.linspace(0, T, 2500, device=device).reshape(-1, 1)
+    plt.subplot(1, 3, 3)
+    t_test = torch.linspace(0, T + 150, 2500, device=device).reshape(-1, 1)
     X_pred = model(t_test)
     G_pred = X_pred[:, 5].detach().cpu().numpy()
 
     plt.plot(t_test.cpu().numpy(), G_pred, label='Predicted Glucose (G)')
-    plt.plot(data["t"], data["G"], label='True Glucose (G)')
+    plt.plot(t_data.cpu().numpy(), data["G"], label='True Glucose (G)')
     plt.xlabel('Time (t)')
     plt.ylabel('Glucose Level')
     plt.title('Predicted vs True Glucose Levels')
-    plt.legend()
-
-    plt.subplot(2, 4, 3)
-    Gsc_pred = X_pred[:, 6].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), Gsc_pred, label='Predicted (Gsc)')
-    plt.plot(data["t"], data["G_sc"], label='True (Gsc)')
-    plt.legend()
-
-    plt.subplot(2, 4, 4)
-    D1_pred = X_pred[:, 0].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), D1_pred, label='Predicted (D1)')
-    plt.plot(data["t"], data["D1"], label='True Glucose (D1)')
-    plt.legend()
-
-    plt.subplot(2, 4, 5)
-    D2_pred = X_pred[:, 1].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), D2_pred, label='Predicted Glucose (D2)')
-    plt.plot(data["t"], data["D2"], label='True Glucose (D2)')
-    plt.legend()
-
-    plt.subplot(2, 4, 6)
-    Isc_pred = X_pred[:, 2].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), Isc_pred, label='Predicted (Isc)')
-    plt.plot(data["t"], data["I_sc"], label='True Glucose (Isc)')
-    plt.legend()
-
-    plt.subplot(2, 4, 7)
-    Ip_pred = X_pred[:, 3].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), Ip_pred, label='Predicted (Ip)')
-    plt.plot(data["t"], data["I_p"], label='True (Ip)')
-    plt.legend()
-
-    plt.subplot(2, 4, 8)
-    Ieff_pred = X_pred[:, 4].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), Ieff_pred, label='Predicted (Ieff)')
-    plt.plot(data["t"], data["I_eff"], label='True (Ieff)')
     plt.legend()
 
     plt.tight_layout()
