@@ -1,0 +1,15 @@
+Loaded module: cuda/11.6
+/zhome/31/8/154954/02456/Project/pinn2.py:293: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_train = torch.tensor(ts_train, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:294: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_test = torch.tensor(ts_test, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:381: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  plt.figure()
+Traceback (most recent call last):
+  File "/zhome/31/8/154954/02456/Project/pinn2.py", line 331, in <module>
+    pred, err = NN.test(ts_test)
+                ^^^^^^^^^^^^^^^^
+  File "/zhome/31/8/154954/02456/Project/pinn2.py", line 255, in test
+    error_vec = torch.linalg.norm((X_true-X_pred),2)/torch.linalg.norm(X_true,2)
+                                   ~~~~~~^~~~~~~
+RuntimeError: The size of tensor a (7) must match the size of tensor b (8) at non-singleton dimension 1

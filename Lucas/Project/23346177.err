@@ -1,0 +1,15 @@
+Loaded module: cuda/11.6
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Currently logged in as: s203768 (s203768-dtu). Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.18.7
+wandb: Run data is saved locally in /zhome/31/8/154954/02456/Project/wandb/run-20241204_162809-2ghwnknj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sandy-leaf-1
+wandb: ⭐️ View project at https://wandb.ai/s203768-dtu/Parameter%20Estimation%20in%20MVP
+wandb: 🚀 View run at https://wandb.ai/s203768-dtu/Parameter%20Estimation%20in%20MVP/runs/2ghwnknj
+/zhome/31/8/154954/02456/Project/pinn2.py:306: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_train = torch.tensor(ts_train, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:307: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_test = torch.tensor(ts_test, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:404: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  plt.figure()

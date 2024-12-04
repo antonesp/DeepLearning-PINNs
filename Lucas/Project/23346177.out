@@ -1,0 +1,545 @@
+cuda
+/zhome/31/8/154954/02456/Project
+Training data loaded successfully!
+True parms 0.0081 49.0 47.0 20.1 0.0106 0.0022 1.33 253.0 47.0 5.0
+[1, 64, 128, 64, 7]
+0.0004
+Epoch: 0, Data loss: 1185152640.0000, ODE loss: 8663012.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 1185152640.0000, Adaptive ODE loss: 8663012.0000, Adaptive parameter loss: 0.0000
+Si: 0.00960, tau1: 47.00040, tau2: 47.00040, Ci: 18.00040, p2: 0.00010, GEZI: 0.00010, EGP0: 1.99960, Vg: 300.00040, taum: 50.00040, tausc: 6.00040
+Epoch: 2000, Data loss: 2933.8838, ODE loss: 4265815.0000, Parameter loss: 10.6809
+Epoch: 2000, Adaptive data loss: 945.4064, Adaptive ODE loss: 1517405.9380, Adaptive parameter loss: 3.4398
+Si: 0.00455, tau1: 47.68103, tau2: 47.36361, Ci: 18.69366, p2: 0.00000, GEZI: -0.03268, EGP0: 1.90577, Vg: 300.08948, taum: 50.24924, tausc: 6.36255
+Epoch: 4000, Data loss: 23484.7988, ODE loss: 1252897.7500, Parameter loss: 7.9753
+Epoch: 4000, Adaptive data loss: 8275.4690, Adaptive ODE loss: 407793.3562, Adaptive parameter loss: 2.5692
+Si: 0.00454, tau1: 48.22651, tau2: 47.45675, Ci: 19.29249, p2: 0.00000, GEZI: -0.02824, EGP0: 1.81501, Vg: 300.17896, taum: 50.39928, tausc: 6.48145
+Epoch: 6000, Data loss: 18856.2090, ODE loss: 429961.5312, Parameter loss: 5.0163
+Epoch: 6000, Adaptive data loss: 5908.5338, Adaptive ODE loss: 156923.4000, Adaptive parameter loss: 1.6137
+Si: 0.00453, tau1: 48.50446, tau2: 47.48412, Ci: 19.63465, p2: 0.00001, GEZI: -0.02240, EGP0: 1.60687, Vg: 300.30844, taum: 50.69543, tausc: 6.53096
+Epoch: 8000, Data loss: 18247.3789, ODE loss: 125936.0781, Parameter loss: 1.8292
+Epoch: 8000, Adaptive data loss: 5879.8133, Adaptive ODE loss: 44798.2798, Adaptive parameter loss: 0.5891
+Si: 0.00454, tau1: 48.73653, tau2: 47.49725, Ci: 19.90206, p2: 0.00000, GEZI: -0.01352, EGP0: 1.15269, Vg: 300.42203, taum: 51.26362, tausc: 6.54629
+Epoch: 10000, Data loss: 17817.6543, ODE loss: 4482.5757, Parameter loss: 0.6354
+Epoch: 10000, Adaptive data loss: 5766.6062, Adaptive ODE loss: 1587.9980, Adaptive parameter loss: 0.2047
+Si: 0.00454, tau1: 48.83047, tau2: 47.53936, Ci: 20.02721, p2: -0.00000, GEZI: -0.00797, EGP0: 0.76781, Vg: 300.49426, taum: 52.04093, tausc: 6.55197
+Epoch: 12000, Data loss: 17482.9570, ODE loss: 2317.5479, Parameter loss: 0.2660
+Epoch: 12000, Adaptive data loss: 5534.2592, Adaptive ODE loss: 838.0494, Adaptive parameter loss: 0.0856
+Si: 0.00454, tau1: 48.84560, tau2: 47.58654, Ci: 20.04045, p2: -0.00000, GEZI: -0.00516, EGP0: 0.51937, Vg: 300.51898, taum: 52.67295, tausc: 6.56143
+Epoch: 14000, Data loss: 17262.5664, ODE loss: 2184.7471, Parameter loss: 0.0614
+Epoch: 14000, Adaptive data loss: 5435.0398, Adaptive ODE loss: 793.9452, Adaptive parameter loss: 0.0197
+Si: 0.00455, tau1: 48.89474, tau2: 47.63655, Ci: 20.07545, p2: 0.00000, GEZI: -0.00248, EGP0: 0.22240, Vg: 300.50577, taum: 53.39308, tausc: 6.57643
+Epoch: 16000, Data loss: 17235.5957, ODE loss: 632.8658, Parameter loss: 0.0042
+Epoch: 16000, Adaptive data loss: 5626.3087, Adaptive ODE loss: 222.3867, Adaptive parameter loss: 0.0014
+Si: 0.00455, tau1: 48.97152, tau2: 47.70524, Ci: 20.14912, p2: -0.00000, GEZI: -0.00065, EGP0: 0.03084, Vg: 300.43967, taum: 54.04895, tausc: 6.61832
+Epoch: 18000, Data loss: 16839.6621, ODE loss: 8449.6221, Parameter loss: 0.0011
+Epoch: 18000, Adaptive data loss: 5807.2828, Adaptive ODE loss: 2812.5452, Adaptive parameter loss: 0.0004
+Si: 0.00457, tau1: 49.04117, tau2: 47.82827, Ci: 20.21716, p2: 0.00000, GEZI: -0.00032, EGP0: 0.00850, Vg: 300.31650, taum: 54.68835, tausc: 6.67428
+Epoch: 20000, Data loss: 16778.6777, ODE loss: 953.2960, Parameter loss: 0.0031
+Epoch: 20000, Adaptive data loss: 5477.5701, Adaptive ODE loss: 334.9608, Adaptive parameter loss: 0.0010
+Si: 0.00462, tau1: 49.24001, tau2: 48.00193, Ci: 20.55253, p2: 0.00000, GEZI: -0.00056, EGP0: 0.03958, Vg: 300.30942, taum: 55.32292, tausc: 6.75670
+Epoch: 22000, Data loss: 16503.3867, ODE loss: 151.9165, Parameter loss: 0.0002
+Epoch: 22000, Adaptive data loss: 5480.5417, Adaptive ODE loss: 52.5086, Adaptive parameter loss: 0.0001
+Si: 0.00502, tau1: 49.25884, tau2: 48.25173, Ci: 20.66278, p2: -0.00001, GEZI: -0.00013, EGP0: -0.00001, Vg: 300.37189, taum: 55.71891, tausc: 6.91116
+Epoch: 24000, Data loss: 16485.3164, ODE loss: 1546.9729, Parameter loss: 0.0013
+Epoch: 24000, Adaptive data loss: 5282.4766, Adaptive ODE loss: 553.1613, Adaptive parameter loss: 0.0004
+Si: 0.00486, tau1: 49.36145, tau2: 48.43251, Ci: 20.83113, p2: -0.00000, GEZI: -0.00036, EGP0: 0.03027, Vg: 300.39420, taum: 56.39937, tausc: 7.19780
+Epoch: 26000, Data loss: 16475.7891, ODE loss: 161.4362, Parameter loss: 0.0073
+Epoch: 26000, Adaptive data loss: 5656.1646, Adaptive ODE loss: 53.9847, Adaptive parameter loss: 0.0024
+Si: 0.00464, tau1: 49.44483, tau2: 48.74252, Ci: 20.85041, p2: 0.00001, GEZI: -0.00086, EGP0: 0.08756, Vg: 300.35593, taum: 57.11592, tausc: 7.41726
+Epoch: 28000, Data loss: 16525.2832, ODE loss: 345.8489, Parameter loss: 0.0005
+Epoch: 28000, Adaptive data loss: 12636.2097, Adaptive ODE loss: 17.2132, Adaptive parameter loss: 0.0001
+Si: 0.00455, tau1: 49.57473, tau2: 49.12332, Ci: 20.85722, p2: -0.00000, GEZI: -0.00023, EGP0: 0.01990, Vg: 300.49756, taum: 57.42384, tausc: 7.55456
+Epoch: 30000, Data loss: 16496.9473, ODE loss: 402.3904, Parameter loss: 0.0015
+Epoch: 30000, Adaptive data loss: 4790.8660, Adaptive ODE loss: 156.7797, Adaptive parameter loss: 0.0005
+Si: 0.00439, tau1: 49.63767, tau2: 49.52633, Ci: 20.99118, p2: -0.00000, GEZI: -0.00040, EGP0: 0.03912, Vg: 300.64413, taum: 57.99383, tausc: 7.86855
+Epoch: 32000, Data loss: 16549.8105, ODE loss: 13635.7285, Parameter loss: 0.0058
+Epoch: 32000, Adaptive data loss: 5341.9423, Adaptive ODE loss: 4842.7739, Adaptive parameter loss: 0.0019
+Si: 0.00439, tau1: 49.85764, tau2: 49.90253, Ci: 21.04377, p2: 0.00000, GEZI: -0.00076, EGP0: 0.08104, Vg: 300.29214, taum: 58.49986, tausc: 8.10973
+Epoch: 34000, Data loss: 16484.7441, ODE loss: 368.0054, Parameter loss: 0.0009
+Epoch: 34000, Adaptive data loss: 5373.3074, Adaptive ODE loss: 129.4962, Adaptive parameter loss: 0.0003
+Si: 0.00440, tau1: 50.10088, tau2: 50.17746, Ci: 21.45170, p2: 0.00003, GEZI: -0.00030, EGP0: 0.02949, Vg: 300.48804, taum: 58.74830, tausc: 8.27886
+Epoch: 36000, Data loss: 16480.9473, ODE loss: 211.0520, Parameter loss: 0.0000
+Epoch: 36000, Adaptive data loss: 5741.7764, Adaptive ODE loss: 69.5165, Adaptive parameter loss: 0.0000
+Si: 0.00441, tau1: 50.14860, tau2: 50.35238, Ci: 21.46200, p2: 0.00001, GEZI: -0.00005, EGP0: 0.00011, Vg: 300.67975, taum: 59.00793, tausc: 8.41604
+Epoch: 38000, Data loss: 16483.2500, ODE loss: 93.2324, Parameter loss: 0.0000
+Epoch: 38000, Adaptive data loss: 5896.4439, Adaptive ODE loss: 29.8617, Adaptive parameter loss: 0.0000
+Si: 0.00449, tau1: 50.20054, tau2: 50.47590, Ci: 21.45895, p2: 0.00003, GEZI: -0.00002, EGP0: -0.00002, Vg: 300.93030, taum: 59.47722, tausc: 8.62711
+Epoch: 40000, Data loss: 16488.5820, ODE loss: 2815.8308, Parameter loss: 0.0000
+Epoch: 40000, Adaptive data loss: 5255.5024, Adaptive ODE loss: 1011.8407, Adaptive parameter loss: 0.0000
+Si: 0.00485, tau1: 50.82684, tau2: 50.91309, Ci: 22.15558, p2: 0.00001, GEZI: -0.00003, EGP0: -0.00001, Vg: 300.94183, taum: 60.14176, tausc: 9.02516
+Epoch: 42000, Data loss: 16485.3848, ODE loss: 775.0702, Parameter loss: 0.0000
+Epoch: 42000, Adaptive data loss: 5475.7896, Adaptive ODE loss: 267.8380, Adaptive parameter loss: 0.0000
+Si: 0.00481, tau1: 51.39525, tau2: 51.37218, Ci: 22.73241, p2: 0.00000, GEZI: -0.00006, EGP0: 0.00346, Vg: 300.99039, taum: 60.64226, tausc: 9.28338
+Epoch: 44000, Data loss: 111.4792, ODE loss: 161.6221, Parameter loss: 0.0000
+Epoch: 44000, Adaptive data loss: 38.9641, Adaptive ODE loss: 53.0560, Adaptive parameter loss: 0.0000
+Si: 0.00481, tau1: 51.77352, tau2: 51.81082, Ci: 23.28846, p2: 0.00000, GEZI: -0.00006, EGP0: 0.00322, Vg: 301.07413, taum: 61.06781, tausc: 9.51406
+Epoch: 46000, Data loss: 10.5131, ODE loss: 112.7551, Parameter loss: 0.0000
+Epoch: 46000, Adaptive data loss: 3.3994, Adaptive ODE loss: 39.9789, Adaptive parameter loss: 0.0000
+Si: 0.00478, tau1: 51.92426, tau2: 52.17597, Ci: 23.51790, p2: 0.00000, GEZI: -0.00004, EGP0: 0.00089, Vg: 301.11807, taum: 61.40745, tausc: 9.73172
+Epoch: 48000, Data loss: 5.2587, ODE loss: 220.8889, Parameter loss: 0.0000
+Epoch: 48000, Adaptive data loss: 1.7012, Adaptive ODE loss: 78.2866, Adaptive parameter loss: 0.0000
+Si: 0.00462, tau1: 51.98693, tau2: 52.40048, Ci: 23.66229, p2: 0.00000, GEZI: -0.00002, EGP0: -0.00001, Vg: 301.06454, taum: 61.62252, tausc: 9.80347
+[1, 64, 128, 64, 7]
+0.0006000000000000001
+Epoch: 0, Data loss: 305544288.0000, ODE loss: 8422687.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 305544288.0000, Adaptive ODE loss: 8422687.0000, Adaptive parameter loss: 0.0000
+Si: 0.00940, tau1: 47.00060, tau2: 47.00060, Ci: 18.00060, p2: -0.00010, GEZI: -0.00010, EGP0: 1.99940, Vg: 300.00061, taum: 50.00060, tausc: 6.00060
+Epoch: 2000, Data loss: 17489.9238, ODE loss: 1123424.0000, Parameter loss: 12.7553
+Epoch: 2000, Adaptive data loss: 5632.6517, Adaptive ODE loss: 399832.5500, Adaptive parameter loss: 4.1078
+Si: 0.00078, tau1: 47.68773, tau2: 47.42285, Ci: 18.80732, p2: 0.00000, GEZI: -0.03572, EGP0: 1.79098, Vg: 300.20535, taum: 50.36771, tausc: 6.33908
+Epoch: 4000, Data loss: 43535.2422, ODE loss: 389872.4375, Parameter loss: 4.2855
+Epoch: 4000, Adaptive data loss: 14020.9488, Adaptive ODE loss: 138754.3715, Adaptive parameter loss: 1.3801
+Si: 0.00078, tau1: 48.10538, tau2: 47.47987, Ci: 19.30840, p2: -0.00000, GEZI: -0.02071, EGP0: 1.52582, Vg: 300.59061, taum: 50.79527, tausc: 6.38465
+Epoch: 6000, Data loss: 71766.2578, ODE loss: 206769.8594, Parameter loss: 1.9458
+Epoch: 6000, Adaptive data loss: 26119.7849, Adaptive ODE loss: 64990.5751, Adaptive parameter loss: 0.6260
+Si: 0.00078, tau1: 48.49879, tau2: 47.48720, Ci: 19.67509, p2: -0.00000, GEZI: -0.01395, EGP0: 1.38052, Vg: 300.64896, taum: 51.11287, tausc: 6.39690
+Epoch: 8000, Data loss: 71111.7969, ODE loss: 151988.9062, Parameter loss: 0.8867
+Epoch: 8000, Adaptive data loss: 27970.1306, Adaptive ODE loss: 43628.3283, Adaptive parameter loss: 0.2834
+Si: 0.00078, tau1: 49.06952, tau2: 47.50704, Ci: 20.14635, p2: 0.00000, GEZI: -0.00942, EGP0: 0.84121, Vg: 301.21069, taum: 51.11409, tausc: 6.40280
+Epoch: 10000, Data loss: 140737.6719, ODE loss: 112184.8438, Parameter loss: 0.3550
+Epoch: 10000, Adaptive data loss: 48281.7076, Adaptive ODE loss: 37541.4044, Adaptive parameter loss: 0.1144
+Si: 0.00078, tau1: 49.73071, tau2: 47.53748, Ci: 20.71240, p2: -0.00000, GEZI: -0.00597, EGP0: 0.53411, Vg: 301.23367, taum: 51.17025, tausc: 6.40905
+Epoch: 12000, Data loss: 118856.8203, ODE loss: 18114.5625, Parameter loss: 0.0802
+Epoch: 12000, Adaptive data loss: 39675.1955, Adaptive ODE loss: 6229.6173, Adaptive parameter loss: 0.0258
+Si: 0.00078, tau1: 50.13297, tau2: 47.60206, Ci: 21.03729, p2: 0.00000, GEZI: -0.00283, EGP0: 0.28219, Vg: 301.23645, taum: 51.42753, tausc: 6.41924
+Epoch: 14000, Data loss: 71576.4688, ODE loss: 7839.9565, Parameter loss: 0.1982
+Epoch: 14000, Adaptive data loss: 23032.5408, Adaptive ODE loss: 2792.4007, Adaptive parameter loss: 0.0638
+Si: 0.00078, tau1: 50.36852, tau2: 47.69754, Ci: 21.22474, p2: -0.00000, GEZI: -0.00445, EGP0: 0.50567, Vg: 301.33267, taum: 53.06356, tausc: 6.43729
+Epoch: 16000, Data loss: 71554.4922, ODE loss: 13619.0352, Parameter loss: 0.2859
+Epoch: 16000, Adaptive data loss: 23015.6724, Adaptive ODE loss: 4852.7843, Adaptive parameter loss: 0.0921
+Si: 0.00078, tau1: 50.92405, tau2: 47.85666, Ci: 21.68025, p2: -0.00000, GEZI: -0.00535, EGP0: 0.62489, Vg: 301.34460, taum: 54.01184, tausc: 6.48391
+Epoch: 18000, Data loss: 71620.2656, ODE loss: 2264.7979, Parameter loss: 0.2244
+Epoch: 18000, Adaptive data loss: 23062.1189, Adaptive ODE loss: 806.1594, Adaptive parameter loss: 0.0723
+Si: 0.00078, tau1: 51.69670, tau2: 48.26544, Ci: 22.39342, p2: 0.00000, GEZI: -0.00473, EGP0: 0.55236, Vg: 301.25467, taum: 55.20026, tausc: 6.58779
+Epoch: 20000, Data loss: 68964.9688, ODE loss: 8529.2588, Parameter loss: 0.0987
+Epoch: 20000, Adaptive data loss: 22471.7809, Adaptive ODE loss: 3002.3254, Adaptive parameter loss: 0.0318
+Si: 0.00356, tau1: 52.60484, tau2: 48.90241, Ci: 23.33972, p2: -0.00000, GEZI: -0.00314, EGP0: 0.36136, Vg: 301.29886, taum: 55.95874, tausc: 6.87351
+Epoch: 22000, Data loss: 18874.8477, ODE loss: 14766.4053, Parameter loss: 0.0349
+Epoch: 22000, Adaptive data loss: 6674.3990, Adaptive ODE loss: 4788.3996, Adaptive parameter loss: 0.0112
+Si: 0.00342, tau1: 53.46255, tau2: 49.64419, Ci: 24.25350, p2: -0.00000, GEZI: -0.00187, EGP0: 0.06156, Vg: 301.74579, taum: 56.86942, tausc: 7.40871
+Epoch: 24000, Data loss: 16664.5625, ODE loss: 12112.8877, Parameter loss: 0.3899
+Epoch: 24000, Adaptive data loss: 5552.7014, Adaptive ODE loss: 4173.0854, Adaptive parameter loss: 0.1257
+Si: 0.00253, tau1: 54.61916, tau2: 49.81030, Ci: 25.36185, p2: -0.00000, GEZI: -0.00625, EGP0: 0.00387, Vg: 304.20438, taum: 58.06452, tausc: 7.56624
+Epoch: 26000, Data loss: 30.9854, ODE loss: 5010.3696, Parameter loss: 0.0074
+Epoch: 26000, Adaptive data loss: 9.9982, Adaptive ODE loss: 1779.9969, Adaptive parameter loss: 0.0024
+Si: 0.00253, tau1: 55.69460, tau2: 50.17982, Ci: 26.42321, p2: -0.00000, GEZI: -0.00086, EGP0: 0.05211, Vg: 304.70895, taum: 59.36340, tausc: 8.09171
+Epoch: 28000, Data loss: 16569.2070, ODE loss: 4614.9131, Parameter loss: 0.0001
+Epoch: 28000, Adaptive data loss: 5397.5330, Adaptive ODE loss: 1624.8729, Adaptive parameter loss: 0.0000
+Si: 0.00238, tau1: 56.62359, tau2: 51.00535, Ci: 27.37984, p2: -0.00000, GEZI: -0.00010, EGP0: 0.01038, Vg: 304.71921, taum: 60.03305, tausc: 8.63611
+Epoch: 30000, Data loss: 16508.0703, ODE loss: 2191.4026, Parameter loss: 0.0050
+Epoch: 30000, Adaptive data loss: 5260.3929, Adaptive ODE loss: 787.6412, Adaptive parameter loss: 0.0016
+Si: 0.00170, tau1: 57.30792, tau2: 51.38558, Ci: 28.06688, p2: -0.00000, GEZI: -0.00071, EGP0: 0.08250, Vg: 304.71921, taum: 60.94561, tausc: 9.01483
+Epoch: 32000, Data loss: 16491.2188, ODE loss: 441.9880, Parameter loss: 0.0017
+Epoch: 32000, Adaptive data loss: 4348.0005, Adaptive ODE loss: 185.5742, Adaptive parameter loss: 0.0005
+Si: 0.00172, tau1: 57.58902, tau2: 51.60821, Ci: 28.39274, p2: -0.00000, GEZI: -0.00042, EGP0: 0.04615, Vg: 304.77081, taum: 61.45956, tausc: 9.11965
+Epoch: 34000, Data loss: 16492.6211, ODE loss: 297.8209, Parameter loss: 1.2020
+Epoch: 34000, Adaptive data loss: 5727.0517, Adaptive ODE loss: 98.4402, Adaptive parameter loss: 0.3873
+Si: 0.00186, tau1: 57.69180, tau2: 51.84116, Ci: 28.37707, p2: -0.00002, GEZI: -0.01095, EGP0: 0.18276, Vg: 306.33841, taum: 62.17672, tausc: 9.28437
+Epoch: 36000, Data loss: 16744.5215, ODE loss: 659.8511, Parameter loss: 0.1235
+Epoch: 36000, Adaptive data loss: 5951.7352, Adaptive ODE loss: 212.8013, Adaptive parameter loss: 0.0398
+Si: 0.00117, tau1: 58.78502, tau2: 52.39934, Ci: 29.48993, p2: -0.00001, GEZI: -0.00359, EGP0: -0.00003, Vg: 306.78833, taum: 62.94551, tausc: 9.85424
+Epoch: 38000, Data loss: 49.2145, ODE loss: 296.4018, Parameter loss: 0.0015
+Epoch: 38000, Adaptive data loss: 15.1709, Adaptive ODE loss: 109.7694, Adaptive parameter loss: 0.0005
+Si: 0.00131, tau1: 58.94485, tau2: 52.53579, Ci: 29.59352, p2: -0.00000, GEZI: -0.00039, EGP0: 0.01180, Vg: 308.04657, taum: 63.55872, tausc: 10.26562
+Epoch: 40000, Data loss: 11246.6582, ODE loss: 4136.2764, Parameter loss: 0.0017
+Epoch: 40000, Adaptive data loss: 4004.8821, Adaptive ODE loss: 1331.3311, Adaptive parameter loss: 0.0006
+Si: 0.00132, tau1: 59.70745, tau2: 52.75366, Ci: 30.36667, p2: 0.00000, GEZI: -0.00044, EGP0: 0.00121, Vg: 308.06870, taum: 63.98491, tausc: 10.49213
+Epoch: 42000, Data loss: 4.9387, ODE loss: 2014.3005, Parameter loss: 0.0018
+Epoch: 42000, Adaptive data loss: 1.5610, Adaptive ODE loss: 729.3983, Adaptive parameter loss: 0.0006
+Si: 0.00132, tau1: 60.88167, tau2: 52.86573, Ci: 31.57018, p2: -0.00000, GEZI: -0.00042, EGP0: -0.00003, Vg: 308.17703, taum: 64.47846, tausc: 10.50289
+Epoch: 44000, Data loss: 34.8076, ODE loss: 2181.1401, Parameter loss: 0.0206
+Epoch: 44000, Adaptive data loss: 11.2883, Adaptive ODE loss: 771.2123, Adaptive parameter loss: 0.0066
+Si: 0.00191, tau1: 61.96557, tau2: 53.03938, Ci: 32.64576, p2: 0.00000, GEZI: -0.00143, EGP0: -0.00009, Vg: 309.10538, taum: 64.92586, tausc: 10.51207
+Epoch: 46000, Data loss: 51727.6719, ODE loss: 699.3928, Parameter loss: 0.0013
+Epoch: 46000, Adaptive data loss: 17457.0643, Adaptive ODE loss: 237.9371, Adaptive parameter loss: 0.0004
+Si: 0.00213, tau1: 62.57642, tau2: 53.44212, Ci: 33.22019, p2: 0.00000, GEZI: -0.00036, EGP0: 0.01071, Vg: 309.36191, taum: 65.40398, tausc: 10.66517
+Epoch: 48000, Data loss: 24.9329, ODE loss: 123.3240, Parameter loss: 0.0003
+Epoch: 48000, Adaptive data loss: 8.7033, Adaptive ODE loss: 40.5382, Adaptive parameter loss: 0.0001
+Si: 0.00200, tau1: 62.87554, tau2: 53.92793, Ci: 33.58400, p2: -0.00000, GEZI: -0.00017, EGP0: -0.00000, Vg: 309.36191, taum: 65.76871, tausc: 10.78732
+[1, 64, 128, 64, 7]
+0.0008
+Epoch: 0, Data loss: 113789024.0000, ODE loss: 8713934.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 113789024.0000, Adaptive ODE loss: 8713934.0000, Adaptive parameter loss: 0.0000
+Si: 0.00920, tau1: 47.00080, tau2: 47.00080, Ci: 18.00080, p2: -0.00030, GEZI: -0.00030, EGP0: 1.99920, Vg: 300.00079, taum: 50.00080, tausc: 6.00080
+Epoch: 2000, Data loss: 18653.6328, ODE loss: 762917.0625, Parameter loss: 8.6631
+Epoch: 2000, Adaptive data loss: 6012.4327, Adaptive ODE loss: 271314.5553, Adaptive parameter loss: 2.7900
+Si: 0.00113, tau1: 47.82748, tau2: 47.38676, Ci: 18.99545, p2: -0.00000, GEZI: -0.02943, EGP0: 1.82806, Vg: 300.16644, taum: 50.47966, tausc: 6.34414
+Epoch: 4000, Data loss: 19806.9355, ODE loss: 364268.3750, Parameter loss: 3.3602
+Epoch: 4000, Adaptive data loss: 6382.0467, Adaptive ODE loss: 129584.0490, Adaptive parameter loss: 1.0822
+Si: 0.00113, tau1: 48.29402, tau2: 47.41214, Ci: 19.48338, p2: -0.00000, GEZI: -0.01833, EGP0: 1.42487, Vg: 300.23187, taum: 51.10682, tausc: 6.38148
+Epoch: 6000, Data loss: 62983.8203, ODE loss: 216824.0938, Parameter loss: 1.9903
+Epoch: 6000, Adaptive data loss: 22530.6244, Adaptive ODE loss: 69447.8945, Adaptive parameter loss: 0.6408
+Si: 0.00113, tau1: 48.89150, tau2: 47.42625, Ci: 20.00299, p2: 0.00000, GEZI: -0.01404, EGP0: 1.20745, Vg: 300.28574, taum: 51.56055, tausc: 6.39884
+Epoch: 8000, Data loss: 162457.0156, ODE loss: 30048.2773, Parameter loss: 0.5809
+Epoch: 8000, Adaptive data loss: 54042.5977, Adaptive ODE loss: 10368.5317, Adaptive parameter loss: 0.1872
+Si: 0.00113, tau1: 49.44399, tau2: 47.46807, Ci: 20.52315, p2: -0.00000, GEZI: -0.00761, EGP0: 0.70736, Vg: 300.36276, taum: 52.34484, tausc: 6.40537
+Epoch: 10000, Data loss: 162064.1250, ODE loss: 7162.9277, Parameter loss: 0.2441
+Epoch: 10000, Adaptive data loss: 49385.4313, Adaptive ODE loss: 2679.6628, Adaptive parameter loss: 0.0784
+Si: 0.00113, tau1: 49.47321, tau2: 47.53973, Ci: 20.54816, p2: -0.00000, GEZI: -0.00495, EGP0: 0.45819, Vg: 300.35770, taum: 54.18349, tausc: 6.41310
+Epoch: 12000, Data loss: 195475.8281, ODE loss: 9241.3574, Parameter loss: 0.1180
+Epoch: 12000, Adaptive data loss: 60742.5029, Adaptive ODE loss: 3398.1826, Adaptive parameter loss: 0.0379
+Si: 0.00113, tau1: 49.52942, tau2: 47.69556, Ci: 20.55806, p2: -0.00000, GEZI: -0.00344, EGP0: 0.30346, Vg: 300.12946, taum: 55.55951, tausc: 6.43715
+Epoch: 14000, Data loss: 326348.1250, ODE loss: 10456.4414, Parameter loss: 0.0231
+Epoch: 14000, Adaptive data loss: 116331.9061, Adaptive ODE loss: 3361.8363, Adaptive parameter loss: 0.0074
+Si: 0.00200, tau1: 49.74065, tau2: 48.09259, Ci: 20.67813, p2: -0.00000, GEZI: -0.00153, EGP0: 0.12177, Vg: 299.97684, taum: 57.24250, tausc: 6.49995
+Epoch: 16000, Data loss: 83467.5859, ODE loss: 1864.2025, Parameter loss: 0.0240
+Epoch: 16000, Adaptive data loss: 29153.4840, Adaptive ODE loss: 612.4039, Adaptive parameter loss: 0.0077
+Si: 0.00200, tau1: 50.27287, tau2: 48.30967, Ci: 21.08114, p2: -0.00000, GEZI: -0.00155, EGP0: 0.06124, Vg: 298.93921, taum: 58.48042, tausc: 6.54486
+Epoch: 18000, Data loss: 23851.1875, ODE loss: 1526.8507, Parameter loss: 0.0011
+Epoch: 18000, Adaptive data loss: 8045.5753, Adaptive ODE loss: 519.6807, Adaptive parameter loss: 0.0004
+Si: 0.00518, tau1: 50.91169, tau2: 48.84890, Ci: 21.46227, p2: 0.00005, GEZI: 0.00000, EGP0: -0.00033, Vg: 299.02875, taum: 59.56628, tausc: 6.98580
+Epoch: 20000, Data loss: 16774.4414, ODE loss: 6540.4395, Parameter loss: 0.0014
+Epoch: 20000, Adaptive data loss: 5452.8526, Adaptive ODE loss: 2307.4503, Adaptive parameter loss: 0.0004
+Si: 0.00482, tau1: 52.17943, tau2: 50.08386, Ci: 22.91420, p2: -0.00000, GEZI: -0.00037, EGP0: 0.01265, Vg: 299.05988, taum: 60.46910, tausc: 7.62007
+Epoch: 22000, Data loss: 16493.2344, ODE loss: 1726.4523, Parameter loss: 0.0007
+Epoch: 22000, Adaptive data loss: 5418.9633, Adaptive ODE loss: 602.9264, Adaptive parameter loss: 0.0002
+Si: 0.00486, tau1: 52.80595, tau2: 50.53398, Ci: 23.70718, p2: -0.00000, GEZI: -0.00026, EGP0: -0.00000, Vg: 299.19449, taum: 61.88910, tausc: 7.84717
+Epoch: 24000, Data loss: 16491.5156, ODE loss: 383.3056, Parameter loss: 0.0011
+Epoch: 24000, Adaptive data loss: 5345.0593, Adaptive ODE loss: 135.6072, Adaptive parameter loss: 0.0004
+Si: 0.00504, tau1: 53.39743, tau2: 51.28973, Ci: 24.31462, p2: 0.00001, GEZI: -0.00033, EGP0: 0.01847, Vg: 299.30460, taum: 62.37604, tausc: 8.40514
+Epoch: 26000, Data loss: 16497.3359, ODE loss: 551.6522, Parameter loss: 0.0011
+Epoch: 26000, Adaptive data loss: 5406.6511, Adaptive ODE loss: 193.1189, Adaptive parameter loss: 0.0003
+Si: 0.00494, tau1: 53.83406, tau2: 51.54681, Ci: 24.75068, p2: 0.00001, GEZI: -0.00032, EGP0: 0.01792, Vg: 299.45657, taum: 62.98698, tausc: 8.74730
+Epoch: 28000, Data loss: 16486.3242, ODE loss: 472.2218, Parameter loss: 0.0000
+Epoch: 28000, Adaptive data loss: 5261.8766, Adaptive ODE loss: 169.4775, Adaptive parameter loss: 0.0000
+Si: 0.00494, tau1: 53.95478, tau2: 51.62067, Ci: 24.78541, p2: 0.00001, GEZI: 0.00035, EGP0: 0.00447, Vg: 301.12714, taum: 63.89548, tausc: 8.86753
+Epoch: 30000, Data loss: 16477.2617, ODE loss: 326.7578, Parameter loss: 0.0001
+Epoch: 30000, Adaptive data loss: 5096.1793, Adaptive ODE loss: 120.6566, Adaptive parameter loss: 0.0000
+Si: 0.00494, tau1: 54.22548, tau2: 51.86824, Ci: 24.79888, p2: 0.00001, GEZI: -0.00009, EGP0: -0.00001, Vg: 302.43683, taum: 64.88422, tausc: 9.12169
+Epoch: 32000, Data loss: 16475.5254, ODE loss: 147.2762, Parameter loss: 0.0001
+Epoch: 32000, Adaptive data loss: 6514.5460, Adaptive ODE loss: 41.9992, Adaptive parameter loss: 0.0000
+Si: 0.00494, tau1: 54.39978, tau2: 52.05259, Ci: 24.82152, p2: -0.00000, GEZI: -0.00008, EGP0: -0.00000, Vg: 303.67667, taum: 65.84532, tausc: 9.26293
+Epoch: 34000, Data loss: 16477.9473, ODE loss: 209.2077, Parameter loss: 0.0001
+Epoch: 34000, Adaptive data loss: 5506.8826, Adaptive ODE loss: 71.8643, Adaptive parameter loss: 0.0000
+Si: 0.00497, tau1: 54.70513, tau2: 52.48592, Ci: 24.85323, p2: -0.00000, GEZI: -0.00008, EGP0: 0.00045, Vg: 305.02847, taum: 66.68941, tausc: 9.53382
+Epoch: 36000, Data loss: 16549.2578, ODE loss: 3948.6370, Parameter loss: 0.0003
+Epoch: 36000, Adaptive data loss: 5346.4286, Adaptive ODE loss: 1401.2239, Adaptive parameter loss: 0.0001
+Si: 0.00475, tau1: 55.29214, tau2: 53.03428, Ci: 25.25350, p2: -0.00000, GEZI: -0.00016, EGP0: 0.01566, Vg: 305.55917, taum: 67.45630, tausc: 10.32822
+Epoch: 38000, Data loss: 16521.3066, ODE loss: 326.0705, Parameter loss: 0.0000
+Epoch: 38000, Adaptive data loss: 5312.7522, Adaptive ODE loss: 116.2124, Adaptive parameter loss: 0.0000
+Si: 0.00467, tau1: 56.27423, tau2: 53.41116, Ci: 26.69313, p2: 0.00001, GEZI: -0.00003, EGP0: -0.00001, Vg: 305.55905, taum: 67.88359, tausc: 10.56903
+Epoch: 40000, Data loss: 16476.1953, ODE loss: 228.9870, Parameter loss: 0.0001
+Epoch: 40000, Adaptive data loss: 6673.2952, Adaptive ODE loss: 63.3361, Adaptive parameter loss: 0.0000
+Si: 0.00473, tau1: 56.46561, tau2: 53.90530, Ci: 27.06395, p2: 0.00002, GEZI: -0.00009, EGP0: 0.00725, Vg: 305.57010, taum: 68.59668, tausc: 11.01659
+Epoch: 42000, Data loss: 16533.6191, ODE loss: 2874.1880, Parameter loss: 0.0000
+Epoch: 42000, Adaptive data loss: 5744.2647, Adaptive ODE loss: 949.4130, Adaptive parameter loss: 0.0000
+Si: 0.00476, tau1: 56.64991, tau2: 54.44272, Ci: 27.16604, p2: 0.00000, GEZI: -0.00003, EGP0: 0.00120, Vg: 305.82779, taum: 68.91466, tausc: 11.46281
+Epoch: 44000, Data loss: 16486.6895, ODE loss: 149.1774, Parameter loss: 0.0001
+Epoch: 44000, Adaptive data loss: 9634.3383, Adaptive ODE loss: 21.2153, Adaptive parameter loss: 0.0000
+Si: 0.00501, tau1: 57.16893, tau2: 54.81570, Ci: 28.18041, p2: 0.00001, GEZI: -0.00007, EGP0: 0.00005, Vg: 307.76920, taum: 70.10327, tausc: 11.91947
+Epoch: 46000, Data loss: 16473.8789, ODE loss: 117.4741, Parameter loss: 0.0000
+Epoch: 46000, Adaptive data loss: 3505.2551, Adaptive ODE loss: 56.6759, Adaptive parameter loss: 0.0000
+Si: 0.00520, tau1: 57.18140, tau2: 54.88428, Ci: 28.32013, p2: 0.00000, GEZI: -0.00007, EGP0: 0.00005, Vg: 308.98535, taum: 71.05508, tausc: 12.13448
+Epoch: 48000, Data loss: 16496.5527, ODE loss: 161.8276, Parameter loss: 0.0000
+Epoch: 48000, Adaptive data loss: 5393.6469, Adaptive ODE loss: 56.7794, Adaptive parameter loss: 0.0000
+Si: 0.00774, tau1: 57.19604, tau2: 55.23259, Ci: 28.37045, p2: -0.00000, GEZI: -0.00003, EGP0: 0.00144, Vg: 309.71194, taum: 72.02847, tausc: 12.32069
+[1, 64, 128, 64, 7]
+0.001
+Epoch: 0, Data loss: 189662544.0000, ODE loss: 8736432.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 189662544.0000, Adaptive ODE loss: 8736432.0000, Adaptive parameter loss: 0.0000
+Si: 0.00900, tau1: 47.00100, tau2: 47.00100, Ci: 18.00100, p2: -0.00050, GEZI: -0.00050, EGP0: 1.99900, Vg: 300.00101, taum: 50.00100, tausc: 6.00100
+Epoch: 2000, Data loss: 19079.7969, ODE loss: 587923.5625, Parameter loss: 12.9866
+Epoch: 2000, Adaptive data loss: 6152.8890, Adaptive ODE loss: 208983.6198, Adaptive parameter loss: 4.1824
+Si: 0.00269, tau1: 47.90408, tau2: 47.45778, Ci: 19.10110, p2: 0.00024, GEZI: -0.03606, EGP0: 1.83712, Vg: 300.19470, taum: 50.51550, tausc: 6.30065
+Epoch: 4000, Data loss: 41878.7266, ODE loss: 249302.2656, Parameter loss: 7.4074
+Epoch: 4000, Adaptive data loss: 13064.3335, Adaptive ODE loss: 91352.6548, Adaptive parameter loss: 2.3823
+Si: 0.00294, tau1: 48.37710, tau2: 47.48222, Ci: 19.58292, p2: 0.00000, GEZI: -0.02693, EGP0: 1.50253, Vg: 301.12384, taum: 50.63164, tausc: 6.35951
+Epoch: 6000, Data loss: 23685.4102, ODE loss: 152929.0312, Parameter loss: 1.2928
+Epoch: 6000, Adaptive data loss: 6248.9917, Adaptive ODE loss: 64176.9020, Adaptive parameter loss: 0.4092
+Si: 0.00295, tau1: 49.05425, tau2: 47.48949, Ci: 20.12130, p2: -0.00000, GEZI: -0.01138, EGP0: 0.98581, Vg: 302.21399, taum: 50.51400, tausc: 6.37545
+Epoch: 8000, Data loss: 24293.4199, ODE loss: 73378.6094, Parameter loss: 0.1428
+Epoch: 8000, Adaptive data loss: 7849.0839, Adaptive ODE loss: 26036.7956, Adaptive parameter loss: 0.0460
+Si: 0.00295, tau1: 49.90804, tau2: 47.50310, Ci: 20.84506, p2: 0.00000, GEZI: -0.00383, EGP0: 0.35599, Vg: 302.24603, taum: 51.25445, tausc: 6.37870
+Epoch: 10000, Data loss: 24764.1875, ODE loss: 52814.6445, Parameter loss: 0.0234
+Epoch: 10000, Adaptive data loss: 9871.1675, Adaptive ODE loss: 14909.6967, Adaptive parameter loss: 0.0075
+Si: 0.00297, tau1: 50.74188, tau2: 47.53331, Ci: 21.52861, p2: -0.00000, GEZI: -0.00152, EGP0: 0.14031, Vg: 302.24603, taum: 51.25445, tausc: 6.38365
+Epoch: 12000, Data loss: 200716.8438, ODE loss: 17665.9297, Parameter loss: 0.0063
+Epoch: 12000, Adaptive data loss: 70529.1845, Adaptive ODE loss: 5766.9565, Adaptive parameter loss: 0.0020
+Si: 0.00303, tau1: 51.13392, tau2: 47.59133, Ci: 21.82567, p2: -0.00001, GEZI: -0.00079, EGP0: 0.00013, Vg: 302.24625, taum: 51.27167, tausc: 6.39308
+Epoch: 14000, Data loss: 166492.6562, ODE loss: 13789.5020, Parameter loss: 0.0082
+Epoch: 14000, Adaptive data loss: 53965.0055, Adaptive ODE loss: 4878.2311, Adaptive parameter loss: 0.0026
+Si: 0.00321, tau1: 51.98426, tau2: 47.73206, Ci: 22.40122, p2: 0.00016, GEZI: -0.00090, EGP0: 0.04754, Vg: 302.45139, taum: 52.17916, tausc: 6.40913
+Epoch: 16000, Data loss: 141642.7344, ODE loss: 10028.6240, Parameter loss: 0.0266
+Epoch: 16000, Adaptive data loss: 49442.7230, Adaptive ODE loss: 3296.5817, Adaptive parameter loss: 0.0086
+Si: 0.00253, tau1: 52.51092, tau2: 48.11840, Ci: 22.82110, p2: -0.00001, GEZI: -0.00163, EGP0: 0.13492, Vg: 302.47467, taum: 52.44161, tausc: 6.43135
+Epoch: 18000, Data loss: 162341.8594, ODE loss: 27631.8242, Parameter loss: 0.0471
+Epoch: 18000, Adaptive data loss: 101381.9082, Adaptive ODE loss: 3249.2821, Adaptive parameter loss: 0.0122
+Si: 0.00169, tau1: 54.37917, tau2: 48.95136, Ci: 24.15895, p2: -0.00001, GEZI: -0.00216, EGP0: 0.19985, Vg: 302.66718, taum: 52.48610, tausc: 6.62292
+Epoch: 20000, Data loss: 157077.4375, ODE loss: 20716.0117, Parameter loss: 0.0361
+Epoch: 20000, Adaptive data loss: 49852.0421, Adaptive ODE loss: 7473.4925, Adaptive parameter loss: 0.0116
+Si: 0.00167, tau1: 56.02269, tau2: 49.93110, Ci: 25.76078, p2: -0.00000, GEZI: -0.00190, EGP0: 0.17873, Vg: 302.82544, taum: 52.48610, tausc: 6.82773
+Epoch: 22000, Data loss: 141419.0781, ODE loss: 9870.4062, Parameter loss: 0.0336
+Epoch: 22000, Adaptive data loss: 46503.9894, Adaptive ODE loss: 3444.1986, Adaptive parameter loss: 0.0108
+Si: 0.00160, tau1: 57.25246, tau2: 50.91878, Ci: 26.87533, p2: 0.00263, GEZI: -0.00184, EGP0: 0.19392, Vg: 303.08432, taum: 53.56542, tausc: 6.99035
+Epoch: 24000, Data loss: 118115.3438, ODE loss: 13532.2119, Parameter loss: 0.0107
+Epoch: 24000, Adaptive data loss: 40771.6206, Adaptive ODE loss: 4499.9591, Adaptive parameter loss: 0.0035
+Si: 0.00163, tau1: 58.57688, tau2: 51.70343, Ci: 27.77044, p2: 0.00001, GEZI: -0.00104, EGP0: 0.11520, Vg: 303.12631, taum: 54.68855, tausc: 7.72027
+Epoch: 26000, Data loss: 110311.1719, ODE loss: 12706.3398, Parameter loss: 0.0002
+Epoch: 26000, Adaptive data loss: 38664.2445, Adaptive ODE loss: 4158.9117, Adaptive parameter loss: 0.0000
+Si: 0.00160, tau1: 59.78382, tau2: 52.62761, Ci: 29.11949, p2: 0.00000, GEZI: -0.00012, EGP0: 0.00344, Vg: 303.19556, taum: 54.68855, tausc: 7.80812
+Epoch: 28000, Data loss: 110155.8203, ODE loss: 12446.9014, Parameter loss: 0.0143
+Epoch: 28000, Adaptive data loss: 35490.6801, Adaptive ODE loss: 4428.1770, Adaptive parameter loss: 0.0046
+Si: 0.00159, tau1: 61.41232, tau2: 53.46090, Ci: 30.92578, p2: 0.00000, GEZI: -0.00120, EGP0: 0.13427, Vg: 303.24591, taum: 54.69345, tausc: 7.89646
+Epoch: 30000, Data loss: 110183.3281, ODE loss: 10053.7012, Parameter loss: 0.0064
+Epoch: 30000, Adaptive data loss: 40698.9524, Adaptive ODE loss: 3108.3151, Adaptive parameter loss: 0.0021
+Si: 0.00276, tau1: 62.89598, tau2: 55.61219, Ci: 32.16534, p2: -0.00002, GEZI: -0.00080, EGP0: 0.09081, Vg: 303.24365, taum: 56.36941, tausc: 8.66227
+Epoch: 32000, Data loss: 110169.2969, ODE loss: 9992.6182, Parameter loss: 0.0011
+Epoch: 32000, Adaptive data loss: 39223.2520, Adaptive ODE loss: 3216.9542, Adaptive parameter loss: 0.0003
+Si: 0.00261, tau1: 62.90415, tau2: 57.52155, Ci: 32.18460, p2: -0.00000, GEZI: -0.00033, EGP0: 0.03578, Vg: 303.44028, taum: 56.36941, tausc: 8.91132
+Epoch: 34000, Data loss: 110164.2344, ODE loss: 9917.3271, Parameter loss: 0.0016
+Epoch: 34000, Adaptive data loss: 39767.5993, Adaptive ODE loss: 3145.3396, Adaptive parameter loss: 0.0005
+Si: 0.00238, tau1: 62.91188, tau2: 58.65261, Ci: 32.24780, p2: 0.00000, GEZI: -0.00040, EGP0: 0.04434, Vg: 303.69910, taum: 56.37832, tausc: 8.96142
+Epoch: 36000, Data loss: 68546.9453, ODE loss: 17183.3105, Parameter loss: 0.3432
+Epoch: 36000, Adaptive data loss: 22994.8564, Adaptive ODE loss: 5880.8438, Adaptive parameter loss: 0.1106
+Si: 0.00131, tau1: 64.84021, tau2: 59.78093, Ci: 34.47277, p2: -0.00000, GEZI: -0.00587, EGP0: 0.68039, Vg: 302.66833, taum: 56.90307, tausc: 9.43281
+Epoch: 38000, Data loss: 77342.2188, ODE loss: 12869.2734, Parameter loss: 0.0248
+Epoch: 38000, Adaptive data loss: 25361.0936, Adaptive ODE loss: 4502.8439, Adaptive parameter loss: 0.0080
+Si: 0.00134, tau1: 66.53146, tau2: 61.54214, Ci: 36.13694, p2: -0.00001, GEZI: -0.00157, EGP0: 0.16641, Vg: 302.94632, taum: 58.89069, tausc: 9.76415
+Epoch: 40000, Data loss: 16516.5625, ODE loss: 12890.5186, Parameter loss: 0.0001
+Epoch: 40000, Adaptive data loss: 5491.0477, Adaptive ODE loss: 4450.6533, Adaptive parameter loss: 0.0000
+Si: 0.00135, tau1: 67.84807, tau2: 62.65532, Ci: 37.51325, p2: 0.00000, GEZI: -0.00007, EGP0: -0.00002, Vg: 303.03107, taum: 59.09396, tausc: 10.17547
+Epoch: 42000, Data loss: 16465.3926, ODE loss: 11122.4336, Parameter loss: 0.0000
+Epoch: 42000, Adaptive data loss: 6158.7397, Adaptive ODE loss: 3389.9391, Adaptive parameter loss: 0.0000
+Si: 0.00131, tau1: 68.94506, tau2: 63.56738, Ci: 38.80996, p2: 0.00003, GEZI: -0.00006, EGP0: -0.00001, Vg: 303.18756, taum: 59.09396, tausc: 10.30704
+Epoch: 44000, Data loss: 68461.2812, ODE loss: 10257.2578, Parameter loss: 0.1401
+Epoch: 44000, Adaptive data loss: 24329.7156, Adaptive ODE loss: 3308.5888, Adaptive parameter loss: 0.0451
+Si: 0.00126, tau1: 69.65279, tau2: 64.82757, Ci: 39.48611, p2: 0.00003, GEZI: -0.00374, EGP0: 0.43514, Vg: 303.05908, taum: 59.09236, tausc: 11.06561
+Epoch: 46000, Data loss: 63591.5938, ODE loss: 5661.1504, Parameter loss: 0.5174
+Epoch: 46000, Adaptive data loss: 21691.3479, Adaptive ODE loss: 1905.4925, Adaptive parameter loss: 0.1668
+Si: 0.00093, tau1: 70.34127, tau2: 65.70882, Ci: 40.06110, p2: 0.00004, GEZI: -0.00738, EGP0: 0.86549, Vg: 302.24969, taum: 60.91013, tausc: 11.36812
+Epoch: 48000, Data loss: 30706.9492, ODE loss: 7588.0332, Parameter loss: 0.1217
+Epoch: 48000, Adaptive data loss: 10915.0432, Adaptive ODE loss: 2447.0184, Adaptive parameter loss: 0.0392
+Si: 0.00090, tau1: 71.72349, tau2: 66.31628, Ci: 40.62691, p2: -0.00000, GEZI: -0.00349, EGP0: 0.40652, Vg: 302.04688, taum: 63.14672, tausc: 11.95146
+[1, 64, 128, 64, 7]
+0.0012000000000000001
+Epoch: 0, Data loss: 174049056.0000, ODE loss: 8424158.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 174049056.0000, Adaptive ODE loss: 8424158.0000, Adaptive parameter loss: 0.0000
+Si: 0.00880, tau1: 47.00120, tau2: 47.00120, Ci: 18.00120, p2: -0.00070, GEZI: -0.00070, EGP0: 1.99880, Vg: 300.00119, taum: 50.00120, tausc: 6.00120
+Epoch: 2000, Data loss: 53861.7422, ODE loss: 421782.5000, Parameter loss: 11.5177
+Epoch: 2000, Adaptive data loss: 20282.5928, Adaptive ODE loss: 127557.1370, Adaptive parameter loss: 3.6973
+Si: -0.00064, tau1: 47.97636, tau2: 47.45770, Ci: 19.19402, p2: 0.00000, GEZI: -0.03395, EGP0: 1.87473, Vg: 300.07269, taum: 50.36716, tausc: 6.35359
+Epoch: 4000, Data loss: 23101.3594, ODE loss: 203846.3906, Parameter loss: 6.1853
+Epoch: 4000, Adaptive data loss: 7901.0251, Adaptive ODE loss: 68426.7209, Adaptive parameter loss: 1.9936
+Si: -0.00018, tau1: 48.43103, tau2: 47.47686, Ci: 19.63850, p2: -0.00000, GEZI: -0.02485, EGP0: 1.49099, Vg: 300.23691, taum: 50.33232, tausc: 6.39420
+Epoch: 6000, Data loss: 1081585.2500, ODE loss: 143570.6250, Parameter loss: 0.7601
+Epoch: 6000, Adaptive data loss: 387438.2140, Adaptive ODE loss: 45916.9007, Adaptive parameter loss: 0.2447
+Si: -0.00000, tau1: 48.94984, tau2: 47.48348, Ci: 20.10413, p2: 0.00000, GEZI: -0.00862, EGP0: 0.90400, Vg: 300.40002, taum: 50.61033, tausc: 6.40204
+Epoch: 8000, Data loss: 150608.7188, ODE loss: 10304.2324, Parameter loss: 0.3557
+Epoch: 8000, Adaptive data loss: 49706.1304, Adaptive ODE loss: 3583.1636, Adaptive parameter loss: 0.1146
+Si: 0.00000, tau1: 49.20185, tau2: 47.50329, Ci: 20.32541, p2: -0.00000, GEZI: -0.00597, EGP0: 0.64815, Vg: 300.40027, taum: 50.61501, tausc: 6.40526
+Epoch: 10000, Data loss: 18859.6836, ODE loss: 12488.9355, Parameter loss: 0.0956
+Epoch: 10000, Adaptive data loss: 6118.1171, Adaptive ODE loss: 4414.6153, Adaptive parameter loss: 0.0308
+Si: 0.00000, tau1: 49.51889, tau2: 47.57551, Ci: 20.59110, p2: 0.00000, GEZI: -0.00309, EGP0: 0.31689, Vg: 300.42245, taum: 50.68754, tausc: 6.42864
+Epoch: 12000, Data loss: 17946.1914, ODE loss: 9590.5908, Parameter loss: 0.0008
+Epoch: 12000, Adaptive data loss: 5836.3603, Adaptive ODE loss: 3382.1050, Adaptive parameter loss: 0.0003
+Si: 0.00000, tau1: 49.61985, tau2: 47.73519, Ci: 20.67279, p2: -0.00000, GEZI: -0.00029, EGP0: 0.00552, Vg: 300.42459, taum: 52.85126, tausc: 6.48727
+Epoch: 14000, Data loss: 17600.3359, ODE loss: 3823.0576, Parameter loss: 0.0009
+Epoch: 14000, Adaptive data loss: 5624.4509, Adaptive ODE loss: 1370.4855, Adaptive parameter loss: 0.0003
+Si: 0.00000, tau1: 49.83729, tau2: 48.45843, Ci: 20.84378, p2: 0.00000, GEZI: -0.00032, EGP0: 0.01755, Vg: 300.42535, taum: 55.29155, tausc: 6.65133
+Epoch: 16000, Data loss: 16489.6445, ODE loss: 64.4634, Parameter loss: 0.0007
+Epoch: 16000, Adaptive data loss: 5228.9635, Adaptive ODE loss: 23.2729, Adaptive parameter loss: 0.0002
+Si: 0.00001, tau1: 50.28691, tau2: 48.85712, Ci: 20.95952, p2: 0.00000, GEZI: -0.00036, EGP0: 0.02788, Vg: 300.42575, taum: 56.22877, tausc: 6.85003
+Epoch: 18000, Data loss: 16583.4453, ODE loss: 582.0163, Parameter loss: 0.0001
+Epoch: 18000, Adaptive data loss: 5107.4974, Adaptive ODE loss: 215.7126, Adaptive parameter loss: 0.0000
+Si: 0.00500, tau1: 51.64681, tau2: 49.64565, Ci: 22.18851, p2: -0.00001, GEZI: -0.00010, EGP0: 0.00126, Vg: 300.42551, taum: 57.47830, tausc: 6.94985
+Epoch: 20000, Data loss: 16534.6113, ODE loss: 6366.5488, Parameter loss: 0.0002
+Epoch: 20000, Adaptive data loss: 5438.4037, Adaptive ODE loss: 2221.0859, Adaptive parameter loss: 0.0001
+Si: 0.00500, tau1: 53.56030, tau2: 50.48108, Ci: 23.94114, p2: -0.00000, GEZI: -0.00015, EGP0: 0.00901, Vg: 300.42993, taum: 59.06252, tausc: 7.41293
+Epoch: 22000, Data loss: 39998.7383, ODE loss: 6432.1689, Parameter loss: 0.0342
+Epoch: 22000, Adaptive data loss: 12910.6447, Adaptive ODE loss: 2284.3903, Adaptive parameter loss: 0.0110
+Si: 0.00530, tau1: 55.22620, tau2: 52.60435, Ci: 25.33496, p2: -0.00000, GEZI: -0.00191, EGP0: 0.20958, Vg: 300.53543, taum: 59.55859, tausc: 8.54592
+Epoch: 24000, Data loss: 16515.1992, ODE loss: 1989.2964, Parameter loss: 0.0063
+Epoch: 24000, Adaptive data loss: 5309.5115, Adaptive ODE loss: 709.1491, Adaptive parameter loss: 0.0020
+Si: 0.00522, tau1: 56.64955, tau2: 53.31191, Ci: 26.91031, p2: -0.00000, GEZI: -0.00079, EGP0: 0.08007, Vg: 300.53766, taum: 60.20456, tausc: 9.83754
+Epoch: 26000, Data loss: 17139.9199, ODE loss: 1886.6509, Parameter loss: 0.0004
+Epoch: 26000, Adaptive data loss: 6179.6622, Adaptive ODE loss: 599.1639, Adaptive parameter loss: 0.0001
+Si: 0.00489, tau1: 56.92678, tau2: 53.57463, Ci: 27.21211, p2: 0.00001, GEZI: -0.00021, EGP0: 0.01493, Vg: 300.53772, taum: 61.38939, tausc: 10.44966
+Epoch: 28000, Data loss: 16486.0625, ODE loss: 147.5786, Parameter loss: 0.0001
+Epoch: 28000, Adaptive data loss: 5275.6511, Adaptive ODE loss: 52.8362, Adaptive parameter loss: 0.0000
+Si: 0.00484, tau1: 56.95152, tau2: 53.63342, Ci: 27.20503, p2: -0.00000, GEZI: -0.00011, EGP0: 0.00424, Vg: 300.53772, taum: 61.88280, tausc: 10.51425
+Epoch: 30000, Data loss: 16507.8867, ODE loss: 10775.0225, Parameter loss: 0.0003
+Epoch: 30000, Adaptive data loss: 5300.0339, Adaptive ODE loss: 3845.9178, Adaptive parameter loss: 0.0001
+Si: 0.00314, tau1: 58.38091, tau2: 55.21214, Ci: 28.35056, p2: -0.00000, GEZI: -0.00018, EGP0: 0.01659, Vg: 300.55029, taum: 62.85126, tausc: 11.66356
+Epoch: 32000, Data loss: 16490.6094, ODE loss: 11682.5107, Parameter loss: 0.0000
+Epoch: 32000, Adaptive data loss: 5193.7506, Adaptive ODE loss: 4244.1101, Adaptive parameter loss: 0.0000
+Si: 0.00316, tau1: 59.61600, tau2: 55.71128, Ci: 30.02589, p2: 0.00000, GEZI: -0.00004, EGP0: -0.00000, Vg: 300.55191, taum: 62.86101, tausc: 12.00614
+Epoch: 34000, Data loss: 16483.4980, ODE loss: 9986.9355, Parameter loss: 0.0000
+Epoch: 34000, Adaptive data loss: 5835.3798, Adaptive ODE loss: 3234.6295, Adaptive parameter loss: 0.0000
+Si: 0.00416, tau1: 60.55244, tau2: 55.91500, Ci: 31.35579, p2: 0.00000, GEZI: -0.00006, EGP0: 0.00261, Vg: 300.60291, taum: 62.86101, tausc: 12.09193
+Epoch: 36000, Data loss: 16482.7969, ODE loss: 11188.5967, Parameter loss: 0.0000
+Epoch: 36000, Adaptive data loss: 6406.3944, Adaptive ODE loss: 3258.9278, Adaptive parameter loss: 0.0000
+Si: 0.00400, tau1: 62.05436, tau2: 56.12617, Ci: 32.91342, p2: -0.00000, GEZI: -0.00003, EGP0: -0.00000, Vg: 300.66080, taum: 62.90137, tausc: 12.21416
+Epoch: 38000, Data loss: 28924.8457, ODE loss: 10076.1338, Parameter loss: 0.0000
+Epoch: 38000, Adaptive data loss: 10285.6481, Adaptive ODE loss: 3248.0175, Adaptive parameter loss: 0.0000
+Si: 0.00399, tau1: 63.87931, tau2: 56.25729, Ci: 34.68570, p2: 0.00000, GEZI: -0.00001, EGP0: 0.00438, Vg: 300.66483, taum: 62.93623, tausc: 12.26395
+Epoch: 40000, Data loss: 16517.6094, ODE loss: 10965.2100, Parameter loss: 0.0011
+Epoch: 40000, Adaptive data loss: 5176.3168, Adaptive ODE loss: 4001.5812, Adaptive parameter loss: 0.0003
+Si: 0.00362, tau1: 65.00482, tau2: 56.58698, Ci: 35.66915, p2: -0.00000, GEZI: -0.00033, EGP0: 0.03712, Vg: 300.73679, taum: 63.01671, tausc: 12.58811
+Epoch: 42000, Data loss: 16491.0469, ODE loss: 2905.2744, Parameter loss: 0.0002
+Epoch: 42000, Adaptive data loss: 5537.4327, Adaptive ODE loss: 993.3376, Adaptive parameter loss: 0.0001
+Si: 0.00214, tau1: 66.67664, tau2: 57.55216, Ci: 36.90495, p2: 0.00001, GEZI: -0.00013, EGP0: 0.01413, Vg: 300.69968, taum: 63.14014, tausc: 13.16520
+Epoch: 44000, Data loss: 16469.3125, ODE loss: 30.0371, Parameter loss: 0.2618
+Epoch: 44000, Adaptive data loss: 5845.2499, Adaptive ODE loss: 9.7019, Adaptive parameter loss: 0.0843
+Si: 0.00214, tau1: 67.39133, tau2: 57.56503, Ci: 37.61560, p2: 0.00000, GEZI: -0.00511, EGP0: 0.02193, Vg: 303.23779, taum: 63.21429, tausc: 13.23190
+Epoch: 46000, Data loss: 6.5451, ODE loss: 966.6650, Parameter loss: 0.0242
+Epoch: 46000, Adaptive data loss: 2.1099, Adaptive ODE loss: 343.7255, Adaptive parameter loss: 0.0078
+Si: 0.00196, tau1: 68.29948, tau2: 58.16172, Ci: 37.75044, p2: -0.00000, GEZI: -0.00156, EGP0: 0.03275, Vg: 303.80209, taum: 63.37366, tausc: 14.32861
+Epoch: 48000, Data loss: 16472.3555, ODE loss: 10005.9082, Parameter loss: 0.0020
+Epoch: 48000, Adaptive data loss: 5868.5648, Adaptive ODE loss: 3218.9046, Adaptive parameter loss: 0.0006
+Si: 0.00196, tau1: 68.62289, tau2: 58.22754, Ci: 38.08130, p2: -0.00001, GEZI: -0.00045, EGP0: 0.02750, Vg: 303.80212, taum: 63.39658, tausc: 14.58638
+[1, 64, 128, 64, 7]
+0.0014000000000000002
+Epoch: 0, Data loss: 317598016.0000, ODE loss: 8733539.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 317598016.0000, Adaptive ODE loss: 8733539.0000, Adaptive parameter loss: 0.0000
+Si: 0.00860, tau1: 47.00140, tau2: 47.00140, Ci: 18.00140, p2: -0.00090, GEZI: -0.00090, EGP0: 1.99860, Vg: 300.00140, taum: 50.00140, tausc: 6.00140
+Epoch: 2000, Data loss: 22038.0391, ODE loss: 422545.7500, Parameter loss: 9.1590
+Epoch: 2000, Adaptive data loss: 6960.9219, Adaptive ODE loss: 153103.1932, Adaptive parameter loss: 2.9474
+Si: 0.00174, tau1: 48.01891, tau2: 47.72136, Ci: 19.24687, p2: 0.00105, GEZI: -0.03021, EGP0: 1.68667, Vg: 300.60666, taum: 50.42458, tausc: 6.54760
+Epoch: 4000, Data loss: 37596.2578, ODE loss: 205632.8125, Parameter loss: 2.9901
+Epoch: 4000, Adaptive data loss: 11496.3201, Adaptive ODE loss: 76695.6930, Adaptive parameter loss: 0.9606
+Si: 0.00277, tau1: 48.64082, tau2: 47.81100, Ci: 19.86420, p2: 0.00016, GEZI: -0.01713, EGP0: 1.25197, Vg: 301.28650, taum: 50.49441, tausc: 6.63815
+Epoch: 6000, Data loss: 47357.8594, ODE loss: 86979.7734, Parameter loss: 0.7152
+Epoch: 6000, Adaptive data loss: 15319.3453, Adaptive ODE loss: 30828.3164, Adaptive parameter loss: 0.2304
+Si: 0.00284, tau1: 49.38063, tau2: 47.82924, Ci: 20.50624, p2: 0.00000, GEZI: -0.00846, EGP0: 0.87082, Vg: 301.52988, taum: 50.72869, tausc: 6.66693
+Epoch: 8000, Data loss: 23917.8555, ODE loss: 11672.0898, Parameter loss: 0.1868
+Epoch: 8000, Adaptive data loss: 7888.1858, Adaptive ODE loss: 4061.3998, Adaptive parameter loss: 0.0602
+Si: 0.00284, tau1: 49.63538, tau2: 47.84578, Ci: 20.74833, p2: -0.00000, GEZI: -0.00432, EGP0: 0.45721, Vg: 301.54565, taum: 50.85323, tausc: 6.67011
+Epoch: 10000, Data loss: 24679.6719, ODE loss: 18257.3750, Parameter loss: 0.0009
+Epoch: 10000, Adaptive data loss: 8508.9114, Adaptive ODE loss: 6078.6620, Adaptive parameter loss: 0.0003
+Si: 0.00284, tau1: 50.10695, tau2: 47.88774, Ci: 21.08155, p2: -0.00000, GEZI: -0.00030, EGP0: -0.00001, Vg: 301.54065, taum: 53.05614, tausc: 6.67750
+Epoch: 12000, Data loss: 23087.9805, ODE loss: 12814.3984, Parameter loss: 0.0010
+Epoch: 12000, Adaptive data loss: 7553.3230, Adaptive ODE loss: 4493.5121, Adaptive parameter loss: 0.0003
+Si: 0.00284, tau1: 50.95554, tau2: 47.95375, Ci: 21.69249, p2: -0.00000, GEZI: -0.00031, EGP0: 0.00001, Vg: 301.54086, taum: 55.74705, tausc: 6.69866
+Epoch: 14000, Data loss: 201794.2969, ODE loss: 16175.7295, Parameter loss: 0.0014
+Epoch: 14000, Adaptive data loss: 66650.1091, Adaptive ODE loss: 5620.5238, Adaptive parameter loss: 0.0005
+Si: 0.00284, tau1: 52.55854, tau2: 47.99120, Ci: 22.84492, p2: -0.00000, GEZI: -0.00037, EGP0: 0.01684, Vg: 301.55524, taum: 57.62088, tausc: 6.70835
+Epoch: 16000, Data loss: 201890.1250, ODE loss: 5770.9741, Parameter loss: 0.0081
+Epoch: 16000, Adaptive data loss: 65266.2210, Adaptive ODE loss: 2046.6286, Adaptive parameter loss: 0.0026
+Si: 0.00284, tau1: 54.19947, tau2: 48.28541, Ci: 24.15422, p2: -0.00000, GEZI: -0.00090, EGP0: 0.08618, Vg: 301.61383, taum: 59.91550, tausc: 6.71101
+Epoch: 18000, Data loss: 144304.1250, ODE loss: 14154.5830, Parameter loss: 0.0324
+Epoch: 18000, Adaptive data loss: 47898.8455, Adaptive ODE loss: 4894.6611, Adaptive parameter loss: 0.0104
+Si: 0.00328, tau1: 56.27436, tau2: 48.61252, Ci: 25.67758, p2: -0.00000, GEZI: -0.00180, EGP0: 0.19554, Vg: 301.65674, taum: 61.52085, tausc: 6.75619
+Epoch: 20000, Data loss: 144710.4688, ODE loss: 1711.3231, Parameter loss: 0.0546
+Epoch: 20000, Adaptive data loss: 52539.0401, Adaptive ODE loss: 539.3514, Adaptive parameter loss: 0.0176
+Si: 0.00332, tau1: 57.54865, tau2: 49.06689, Ci: 26.95734, p2: -0.00000, GEZI: -0.00234, EGP0: 0.26869, Vg: 301.84088, taum: 63.72156, tausc: 6.88418
+Epoch: 22000, Data loss: 167102.2812, ODE loss: 4420.0020, Parameter loss: 0.0085
+Epoch: 22000, Adaptive data loss: 54247.0319, Adaptive ODE loss: 1561.3420, Adaptive parameter loss: 0.0027
+Si: 0.00265, tau1: 58.61259, tau2: 49.58637, Ci: 27.71603, p2: -0.00000, GEZI: -0.00092, EGP0: 0.05507, Vg: 305.49698, taum: 64.83929, tausc: 7.11639
+Epoch: 24000, Data loss: 143514.5781, ODE loss: 3090.6243, Parameter loss: 0.0140
+Epoch: 24000, Adaptive data loss: 54906.9569, Adaptive ODE loss: 917.6022, Adaptive parameter loss: 0.0045
+Si: 0.00245, tau1: 61.26799, tau2: 50.12814, Ci: 30.05688, p2: -0.00000, GEZI: -0.00127, EGP0: 0.12888, Vg: 305.49408, taum: 65.99460, tausc: 7.18595
+Epoch: 26000, Data loss: 131915.0781, ODE loss: 2412.0662, Parameter loss: 0.0218
+Epoch: 26000, Adaptive data loss: 43090.2807, Adaptive ODE loss: 847.0508, Adaptive parameter loss: 0.0070
+Si: 0.00506, tau1: 63.59353, tau2: 51.66216, Ci: 32.09333, p2: 0.00000, GEZI: -0.00148, EGP0: 0.16517, Vg: 305.49149, taum: 67.50440, tausc: 7.59356
+Epoch: 28000, Data loss: 164991.6719, ODE loss: 4543.8608, Parameter loss: 0.0013
+Epoch: 28000, Adaptive data loss: 51566.5208, Adaptive ODE loss: 1662.2304, Adaptive parameter loss: 0.0004
+Si: 0.00505, tau1: 65.69155, tau2: 52.60607, Ci: 34.09305, p2: 0.00000, GEZI: -0.00037, EGP0: 0.03555, Vg: 306.01135, taum: 69.14697, tausc: 8.29769
+Epoch: 30000, Data loss: 157111.6406, ODE loss: 1753.1443, Parameter loss: 0.0061
+Epoch: 30000, Adaptive data loss: 55910.6916, Adaptive ODE loss: 564.6683, Adaptive parameter loss: 0.0020
+Si: 0.00160, tau1: 67.09228, tau2: 53.95157, Ci: 36.01396, p2: 0.00236, GEZI: -0.00080, EGP0: 0.08657, Vg: 306.01135, taum: 69.96033, tausc: 9.74595
+Epoch: 32000, Data loss: 157060.2969, ODE loss: 1441.0399, Parameter loss: 0.0020
+Epoch: 32000, Adaptive data loss: 51793.1343, Adaptive ODE loss: 501.5242, Adaptive parameter loss: 0.0007
+Si: 0.00160, tau1: 69.05627, tau2: 54.01446, Ci: 38.17546, p2: 0.00084, GEZI: -0.00051, EGP0: 0.08348, Vg: 306.01135, taum: 70.93620, tausc: 9.85423
+Epoch: 34000, Data loss: 118749.3516, ODE loss: 18078.8262, Parameter loss: 0.0034
+Epoch: 34000, Adaptive data loss: 40045.1623, Adaptive ODE loss: 6155.1519, Adaptive parameter loss: 0.0011
+Si: 0.00155, tau1: 71.87168, tau2: 54.87144, Ci: 39.88340, p2: -0.00000, GEZI: -0.00059, EGP0: 0.06487, Vg: 306.02325, taum: 72.31203, tausc: 10.67105
+Epoch: 36000, Data loss: 105620.5000, ODE loss: 1806.1354, Parameter loss: 0.0004
+Epoch: 36000, Adaptive data loss: 37833.8833, Adaptive ODE loss: 577.6529, Adaptive parameter loss: 0.0001
+Si: 0.00133, tau1: 72.68705, tau2: 55.57499, Ci: 39.83995, p2: -0.00000, GEZI: -0.00020, EGP0: 0.01817, Vg: 306.02325, taum: 72.96036, tausc: 11.57443
+Epoch: 38000, Data loss: 94569.5391, ODE loss: 3172.1128, Parameter loss: 0.0002
+Epoch: 38000, Adaptive data loss: 33642.8772, Adaptive ODE loss: 1022.0668, Adaptive parameter loss: 0.0001
+Si: 0.00109, tau1: 73.33229, tau2: 55.78984, Ci: 40.43569, p2: -0.00000, GEZI: -0.00013, EGP0: 0.00915, Vg: 306.02383, taum: 75.16540, tausc: 12.01233
+Epoch: 40000, Data loss: 121922.9375, ODE loss: 1710.6420, Parameter loss: 0.0000
+Epoch: 40000, Adaptive data loss: 40685.3261, Adaptive ODE loss: 588.4812, Adaptive parameter loss: 0.0000
+Si: 0.00110, tau1: 74.38818, tau2: 56.80652, Ci: 41.64509, p2: 0.00001, GEZI: -0.00006, EGP0: 0.00379, Vg: 306.02438, taum: 76.42076, tausc: 12.19211
+Epoch: 42000, Data loss: 121893.7109, ODE loss: 1143.9261, Parameter loss: 0.0005
+Epoch: 42000, Adaptive data loss: 43545.8867, Adaptive ODE loss: 366.9200, Adaptive parameter loss: 0.0001
+Si: 0.00116, tau1: 75.72787, tau2: 58.48188, Ci: 43.51606, p2: -0.00000, GEZI: -0.00021, EGP0: 0.02229, Vg: 306.02438, taum: 77.16170, tausc: 12.20164
+Epoch: 44000, Data loss: 139483.0938, ODE loss: 14670.3730, Parameter loss: 0.0013
+Epoch: 44000, Adaptive data loss: 45482.4752, Adaptive ODE loss: 5160.4766, Adaptive parameter loss: 0.0004
+Si: 0.00133, tau1: 78.13828, tau2: 58.82386, Ci: 44.96479, p2: -0.00000, GEZI: -0.00037, EGP0: 0.04147, Vg: 306.02594, taum: 78.53268, tausc: 12.63314
+Epoch: 46000, Data loss: 133612.2188, ODE loss: 1093.9824, Parameter loss: 0.0082
+Epoch: 46000, Adaptive data loss: 48046.4766, Adaptive ODE loss: 348.4216, Adaptive parameter loss: 0.0026
+Si: 0.00133, tau1: 78.45467, tau2: 59.11225, Ci: 45.29298, p2: -0.00000, GEZI: -0.00090, EGP0: 0.10463, Vg: 306.02594, taum: 78.64613, tausc: 12.72651
+Epoch: 48000, Data loss: 133603.2031, ODE loss: 904.3167, Parameter loss: 0.0027
+Epoch: 48000, Adaptive data loss: 46902.3507, Adaptive ODE loss: 295.5006, Adaptive parameter loss: 0.0009
+Si: 0.00133, tau1: 78.99073, tau2: 59.72587, Ci: 46.14576, p2: 0.00000, GEZI: -0.00052, EGP0: 0.06026, Vg: 307.31866, taum: 79.11242, tausc: 12.81795
+[1, 64, 128, 64, 7]
+0.0016
+Epoch: 0, Data loss: 323122560.0000, ODE loss: 8560416.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 323122560.0000, Adaptive ODE loss: 8560416.0000, Adaptive parameter loss: 0.0000
+Si: 0.00840, tau1: 47.00160, tau2: 47.00160, Ci: 18.00160, p2: -0.00110, GEZI: -0.00110, EGP0: 1.99840, Vg: 300.00159, taum: 50.00160, tausc: 6.00160
+Epoch: 2000, Data loss: 20565.3281, ODE loss: 432071.4375, Parameter loss: 7.5333
+Epoch: 2000, Adaptive data loss: 6588.0435, Adaptive ODE loss: 154538.0962, Adaptive parameter loss: 2.4256
+Si: 0.00179, tau1: 48.25947, tau2: 47.40209, Ci: 19.43746, p2: 0.00134, GEZI: -0.02741, EGP0: 1.81207, Vg: 300.26617, taum: 50.23926, tausc: 6.36870
+Epoch: 4000, Data loss: 32506.2246, ODE loss: 75930.1641, Parameter loss: 6.7518
+Epoch: 4000, Adaptive data loss: 9744.1832, Adaptive ODE loss: 28810.2784, Adaptive parameter loss: 2.1660
+Si: -0.00088, tau1: 48.93357, tau2: 47.44850, Ci: 20.11424, p2: -0.00000, GEZI: -0.02620, EGP0: 1.37331, Vg: 300.80045, taum: 50.16597, tausc: 6.43209
+Epoch: 6000, Data loss: 19299.3926, ODE loss: 10266.1240, Parameter loss: 0.7946
+Epoch: 6000, Adaptive data loss: 6543.3909, Adaptive ODE loss: 3476.4919, Adaptive parameter loss: 0.2561
+Si: -0.00018, tau1: 49.01348, tau2: 47.46239, Ci: 20.16817, p2: -0.00000, GEZI: -0.00891, EGP0: 0.89215, Vg: 301.47198, taum: 50.99971, tausc: 6.44025
+Epoch: 8000, Data loss: 22491.5938, ODE loss: 10032.6504, Parameter loss: 0.1108
+Epoch: 8000, Adaptive data loss: 7249.8142, Adaptive ODE loss: 3567.7378, Adaptive parameter loss: 0.0357
+Si: -0.00000, tau1: 49.20815, tau2: 47.48708, Ci: 20.30113, p2: -0.00000, GEZI: -0.00333, EGP0: 0.29525, Vg: 301.48297, taum: 52.78307, tausc: 6.45886
+Epoch: 10000, Data loss: 69602.6875, ODE loss: 11826.4766, Parameter loss: 0.0166
+Epoch: 10000, Adaptive data loss: 22454.5056, Adaptive ODE loss: 4202.2853, Adaptive parameter loss: 0.0053
+Si: -0.00000, tau1: 49.58808, tau2: 47.54134, Ci: 20.58541, p2: 0.00000, GEZI: -0.00129, EGP0: 0.12866, Vg: 301.48407, taum: 54.92775, tausc: 6.48832
+Epoch: 12000, Data loss: 22396.7227, ODE loss: 9970.2080, Parameter loss: 0.0210
+Epoch: 12000, Adaptive data loss: 7079.0379, Adaptive ODE loss: 3610.2927, Adaptive parameter loss: 0.0068
+Si: 0.00000, tau1: 50.23004, tau2: 47.58744, Ci: 21.09466, p2: 0.00000, GEZI: -0.00147, EGP0: 0.15698, Vg: 301.48425, taum: 56.17056, tausc: 6.54315
+Epoch: 14000, Data loss: 16502.8125, ODE loss: 9623.2080, Parameter loss: 0.0085
+Epoch: 14000, Adaptive data loss: 5406.6735, Adaptive ODE loss: 3369.8888, Adaptive parameter loss: 0.0028
+Si: 0.00007, tau1: 51.97378, tau2: 47.65640, Ci: 22.48709, p2: 0.00000, GEZI: -0.00092, EGP0: 0.09805, Vg: 301.48151, taum: 57.58373, tausc: 6.88519
+Epoch: 16000, Data loss: 19139.2109, ODE loss: 7619.1396, Parameter loss: 0.0000
+Epoch: 16000, Adaptive data loss: 6840.3628, Adaptive ODE loss: 2442.7362, Adaptive parameter loss: 0.0000
+Si: 0.00007, tau1: 54.56528, tau2: 47.76808, Ci: 24.76249, p2: -0.00000, GEZI: -0.00006, EGP0: 0.00084, Vg: 301.86612, taum: 59.09535, tausc: 7.24468
+Epoch: 18000, Data loss: 16477.0195, ODE loss: 2603.2185, Parameter loss: 0.0001
+Epoch: 18000, Adaptive data loss: 5966.5791, Adaptive ODE loss: 822.8066, Adaptive parameter loss: 0.0000
+Si: 0.00024, tau1: 56.69104, tau2: 47.79078, Ci: 26.81268, p2: -0.00000, GEZI: -0.00010, EGP0: 0.00430, Vg: 301.86685, taum: 59.93281, tausc: 7.38992
+Epoch: 20000, Data loss: 16477.7285, ODE loss: 1989.1252, Parameter loss: 0.0002
+Epoch: 20000, Adaptive data loss: 5316.8145, Adaptive ODE loss: 706.6761, Adaptive parameter loss: 0.0001
+Si: 0.00388, tau1: 58.74320, tau2: 47.82461, Ci: 28.72173, p2: -0.00000, GEZI: -0.00013, EGP0: 0.00537, Vg: 301.95691, taum: 61.29537, tausc: 7.66882
+Epoch: 22000, Data loss: 5605.2744, ODE loss: 4140.8662, Parameter loss: 0.0035
+Epoch: 22000, Adaptive data loss: 1979.2236, Adaptive ODE loss: 1344.8469, Adaptive parameter loss: 0.0011
+Si: 0.00367, tau1: 61.44293, tau2: 48.34376, Ci: 31.17462, p2: -0.00001, GEZI: -0.00059, EGP0: 0.00143, Vg: 303.93796, taum: 63.46601, tausc: 8.45877
+Epoch: 24000, Data loss: 16503.6172, ODE loss: 12073.1143, Parameter loss: 0.0015
+Epoch: 24000, Adaptive data loss: 5622.4964, Adaptive ODE loss: 4068.7042, Adaptive parameter loss: 0.0005
+Si: 0.00650, tau1: 64.15671, tau2: 51.17920, Ci: 33.91006, p2: -0.00000, GEZI: -0.00039, EGP0: 0.00211, Vg: 303.93927, taum: 63.66764, tausc: 9.40704
+Epoch: 26000, Data loss: 16518.0215, ODE loss: 11668.1338, Parameter loss: 0.0009
+Epoch: 26000, Adaptive data loss: 5518.2622, Adaptive ODE loss: 4009.5029, Adaptive parameter loss: 0.0003
+Si: 0.00649, tau1: 66.59210, tau2: 51.45155, Ci: 36.44213, p2: 0.00000, GEZI: -0.00029, EGP0: 0.00208, Vg: 303.94131, taum: 63.68569, tausc: 10.28575
+Epoch: 28000, Data loss: 16472.0156, ODE loss: 11337.8086, Parameter loss: 0.0004
+Epoch: 28000, Adaptive data loss: 5840.4478, Adaptive ODE loss: 3666.0277, Adaptive parameter loss: 0.0001
+Si: 0.00619, tau1: 69.14120, tau2: 51.99354, Ci: 38.98369, p2: 0.00127, GEZI: -0.00021, EGP0: 0.00430, Vg: 303.94235, taum: 63.68569, tausc: 10.49684
+Epoch: 30000, Data loss: 16712.8340, ODE loss: 11072.0732, Parameter loss: 0.0002
+Epoch: 30000, Adaptive data loss: 5951.6275, Adaptive ODE loss: 3563.5650, Adaptive parameter loss: 0.0001
+Si: 0.00429, tau1: 71.80578, tau2: 53.98792, Ci: 41.61198, p2: 0.00000, GEZI: -0.00013, EGP0: 0.00025, Vg: 303.94363, taum: 63.68569, tausc: 10.51965
+Epoch: 32000, Data loss: 16562.7480, ODE loss: 10694.1045, Parameter loss: 0.0009
+Epoch: 32000, Adaptive data loss: 5302.8583, Adaptive ODE loss: 3826.9251, Adaptive parameter loss: 0.0003
+Si: 0.00126, tau1: 74.40906, tau2: 54.38572, Ci: 43.93215, p2: 0.00000, GEZI: -0.00031, EGP0: 0.02561, Vg: 304.06317, taum: 63.84470, tausc: 12.17478
+Epoch: 34000, Data loss: 16498.0898, ODE loss: 1383.8099, Parameter loss: 0.0002
+Epoch: 34000, Adaptive data loss: 5351.3058, Adaptive ODE loss: 489.2141, Adaptive parameter loss: 0.0001
+Si: 0.00127, tau1: 77.03963, tau2: 54.41522, Ci: 46.56367, p2: 0.00000, GEZI: -0.00015, EGP0: 0.00699, Vg: 304.06317, taum: 66.64001, tausc: 12.20612
+Epoch: 36000, Data loss: 16469.3047, ODE loss: 834.0038, Parameter loss: 0.0001
+Epoch: 36000, Adaptive data loss: 6923.0493, Adaptive ODE loss: 219.5296, Adaptive parameter loss: 0.0000
+Si: 0.00127, tau1: 79.79616, tau2: 54.44777, Ci: 49.30009, p2: -0.00000, GEZI: -0.00012, EGP0: 0.00362, Vg: 304.06317, taum: 68.95599, tausc: 12.31875
+Epoch: 38000, Data loss: 16464.7949, ODE loss: 2536.7527, Parameter loss: 0.0001
+Epoch: 38000, Adaptive data loss: 5467.1399, Adaptive ODE loss: 876.8984, Adaptive parameter loss: 0.0000
+Si: 0.00127, tau1: 82.58850, tau2: 54.50882, Ci: 52.03638, p2: 0.00000, GEZI: -0.00010, EGP0: 0.00166, Vg: 304.06320, taum: 70.92957, tausc: 12.41059
+Epoch: 40000, Data loss: 16485.4219, ODE loss: 1345.0253, Parameter loss: 0.0001
+Epoch: 40000, Adaptive data loss: 6252.7836, Adaptive ODE loss: 403.3636, Adaptive parameter loss: 0.0000
+Si: 0.00214, tau1: 85.42213, tau2: 55.14156, Ci: 54.76154, p2: -0.00001, GEZI: -0.00009, EGP0: 0.00081, Vg: 304.06342, taum: 72.58242, tausc: 13.59141
+Epoch: 42000, Data loss: 16464.4141, ODE loss: 10378.7520, Parameter loss: 0.0001
+Epoch: 42000, Adaptive data loss: 5856.1467, Adaptive ODE loss: 3344.7007, Adaptive parameter loss: 0.0000
+Si: 0.00210, tau1: 88.06043, tau2: 55.50301, Ci: 57.44965, p2: -0.00000, GEZI: -0.00008, EGP0: 0.00056, Vg: 304.06342, taum: 72.89120, tausc: 13.90117
+Epoch: 44000, Data loss: 16497.5664, ODE loss: 10321.9756, Parameter loss: 0.0001
+Epoch: 44000, Adaptive data loss: 5877.0779, Adaptive ODE loss: 3320.8874, Adaptive parameter loss: 0.0000
+Si: 0.00210, tau1: 90.82360, tau2: 55.55307, Ci: 60.24316, p2: -0.00000, GEZI: -0.00006, EGP0: 0.00024, Vg: 304.08560, taum: 72.89120, tausc: 13.99172
+Epoch: 46000, Data loss: 16462.8281, ODE loss: 10283.1289, Parameter loss: 0.0001
+Epoch: 46000, Adaptive data loss: 5846.9556, Adaptive ODE loss: 3319.1073, Adaptive parameter loss: 0.0000
+Si: 0.00647, tau1: 93.72082, tau2: 57.54174, Ci: 63.06875, p2: -0.00000, GEZI: -0.00009, EGP0: 0.00073, Vg: 304.16159, taum: 73.31953, tausc: 14.49171
+Epoch: 48000, Data loss: 16458.1914, ODE loss: 10239.3564, Parameter loss: 0.0003
+Epoch: 48000, Adaptive data loss: 5868.3526, Adaptive ODE loss: 3291.0958, Adaptive parameter loss: 0.0001
+Si: 0.00647, tau1: 96.56683, tau2: 58.45854, Ci: 65.88747, p2: 0.00000, GEZI: -0.00018, EGP0: 0.01310, Vg: 304.27759, taum: 73.31953, tausc: 14.53576
+[1;34mwandb[0m: 🚀 View run [33msandy-leaf-1[0m at: [34mhttps://wandb.ai/s203768-dtu/Parameter Estimation in MVP/runs/2ghwnknj[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20241204_162809-2ghwnknj/logs[0m
