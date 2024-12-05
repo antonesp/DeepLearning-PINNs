@@ -12,6 +12,7 @@ import sys
 import os
 from Load_data2 import custom_csv_parser
 
+from softadapt import SoftAdapt, LossWeightedSoftAdapt
 
 
 def grad(func, var):
@@ -46,17 +47,22 @@ class PINN(nn.Module):
         # Define activation function
         self.activation = nn.SiLU()
 
+        # Define loss function
+        self.loss_fn = nn.MSELoss()
+
         # Define patient parameters
-        self.tau_1 = torch.tensor([49.0], requires_grad=True, device=device)       # [min]
-        self.tau_2 = torch.tensor([47.0], requires_grad=True, device=device)       # [min]
-        self.C_I = torch.tensor([20.1], requires_grad=True, device=device)         # [dL/min]
-        self.p_2 = torch.tensor([0.0106], requires_grad=True, device=device)       # [min^(-1)]
+        self.tau_1 = torch.tensor([49.0], device=device)       # [min]
+        self.tau_2 = torch.tensor([47.0], device=device)       # [min]
+        self.C_I = torch.tensor([20.1], device=device)         # [dL/min]
+        self.p_2 = torch.tensor([0.0106], device=device)       # [min^(-1)]
         # self.GEZI = torch.tensor([0.0022], requires_grad=True, device=device)      # [min^(-1)]
-        self.EGP_0 = torch.tensor([1.33], requires_grad=True, device=device)       # [(mg/dL)/min]
-        self.V_G = torch.tensor([253.0], requires_grad=True, device=device)        # [dL]
-        self.tau_m = torch.tensor([47.0], requires_grad=True, device=device)       # [min]
-        self.tau_sc = torch.tensor([5.0], requires_grad=True, device=device)       # [min]
+        self.GEZI = Parameter(torch.tensor([0.001], requires_grad=True, device=device))      # [min^(-1)]
+        self.EGP_0 = torch.tensor([1.33], device=device)       # [(mg/dL)/min]
+        self.V_G = torch.tensor([253.0], device=device)        # [dL]
+        self.tau_m = torch.tensor([47.0], device=device)       # [min]
+        self.tau_sc = torch.tensor([5.0], device=device)       # [min]
         # self.S_I = torch.tensor([0.0081], requires_grad=True, device=device)
+        self.S_I = Parameter(torch.tensor([0.001], requires_grad=True, device=device))
         
     def forward(self, t):
         u = self.activation(self.input(t))
@@ -65,6 +71,9 @@ class PINN(nn.Module):
             u = self.activation(hidden_layer(u))
 
         u = self.output(u)
+
+        u = torch.nn.Softplus()(u)
+
         return u
 
     def _initialize_weights(self):
@@ -101,12 +110,12 @@ class PINN(nn.Module):
         tau_2 = self.tau_2
         C_I = self.C_I
         p_2 = self.p_2
-        # GEZI = self.GEZI
+        GEZI = self.GEZI
         EGP_0 = self.EGP_0
         V_G = self.V_G
         tau_m = self.tau_m
         tau_sc = self.tau_sc
-        # S_I = self.S_I
+        S_I = self.S_I
         
         # Define gradients needed
         D_1_t = grad(D_1, t)
@@ -128,17 +137,12 @@ class PINN(nn.Module):
         Glucose1 = G_t + (GEZI + I_eff) * G - EGP_0 - ((1000 * D_2) / (V_G * tau_m))
         Glucose2 = G_sc_t - (G / tau_sc) + (G_sc / tau_sc)
 
-        loss_ode = (1/scaling_mean[0]*torch.mean((Meal_1)**2)   + 
-                    1/scaling_mean[1]*torch.mean(Meal_2**2)     + 
-                    1/scaling_mean[2]*torch.mean(Insulin1**2)   + 
-                    1/scaling_mean[3]*torch.mean(Insulin2**2)   + 
-                    1/scaling_mean[4]*torch.mean(Insulin3**2)   + 
-                    1/scaling_mean[5]*torch.mean(Glucose1**2 )  + 
-                    1/scaling_mean[6]*torch.mean(Glucose2**2))
-        return loss_ode
-        # return Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2
+        # Create a model matrix
+        mvp = torch.stack([Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2], dim=1)
 
-    def data_loss(self, t, data):
+        return mvp
+
+    def data_loss(self, t):
         X = self.forward(t)
 
         # Meal system
@@ -154,42 +158,35 @@ class PINN(nn.Module):
         G = X[:, 5]
         G_sc = X[:, 6]
 
-        # Convert data to tensors
-        # D1_data = torch.tensor(data["D1"], device=t.device)
-        D1_data = data["D1"]
-        D2_data = data["D2"]
-        I_sc_data = data["I_sc"]
-        I_p_data = data["I_p"]
-        I_eff_data = data["I_eff"]
-        G_data = data["G"]
-        G_sc_data = data["G_sc"]
+        # Define data matrix
+        data_matrix = torch.stack([D_1, D_2, I_sc, I_p, I_eff, G, G_sc], dim=1)
 
-        n = len(t)
-
-        data_1 = torch.mean((D_1 - D1_data)**2) 
-        data_2 = torch.mean((D_2 - D2_data)**2) 
-        data_3 = torch.mean((I_sc - I_sc_data)**2) 
-        data_4 = torch.mean((I_p - I_p_data)**2) 
-        data_5 = torch.mean((I_eff - I_eff_data)**2) 
-        data_6 = torch.mean((G - G_data)**2) 
-        data_7 = torch.mean((G_sc - G_sc_data)**2)
-
-        data_loss = data_1 + data_2 + data_3 + data_4 + data_5 + data_6 + data_7
-
-        return data_loss
+        return data_matrix
 
     def loss(self, t_train, t_data, u, d, data, scaling_mean):
-        loss_ode = self.MVP(t_train, u, d, scaling_mean)
-        loss_data = self.data_loss(t_data, data)
+        
+        # Setup the ODE loss
+        ODE = self.MVP(t_train, u, d, scaling_mean)
+        Ans = torch.zeros_like(ODE)
+        loss_ode = self.loss_fn(ODE, Ans)
 
+        # Setup the data loss
+        data_model = self.data_loss(t_data)
+
+        # Convert data away from dict
+        data = torch.stack([data["D1"], data["D2"], data["I_sc"], data["I_p"], data["I_eff"], data["G"], data["G_sc"]], dim=1)
+
+        loss_data = self.loss_fn(data_model, data)
+        
         return loss_ode, loss_data
 
 if __name__ == "__main__":
     # Check for CUDA availability
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cpu')
 
     # Define our model parameters
-    hidden_dim = 256
+    hidden_dim = 128
     num_hidden_layers = 2
 
     # Load data and pre-process
@@ -217,22 +214,6 @@ if __name__ == "__main__":
         data_val[key] = data_tensor[val_indices]
 
 
-    # Define our model
-    model = PINN(hidden_dim=hidden_dim, num_hidden=num_hidden_layers).to(device)
-
-    # Define the optimizer and scheduler
-    
-    S_I = torch.tensor([0.0], requires_grad=True, device=device)
-    GEZI = torch.tensor([0.0], requires_grad=True, device=device)      # [min^(-1)]
-
-    optimizer = torch.optim.Adam(list(model.parameters()) + [GEZI, S_I], lr=1e-3, weight_decay=1e-5)
-    # optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)
-
-    scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
-   
-    # Define number of epoch
-    num_epoch = 30000
-
     # Collocation points
     ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
     
@@ -248,7 +229,19 @@ if __name__ == "__main__":
     T = data["t"][-1]
     t_train = torch.linspace(0, T, n_train, requires_grad=True, device=device).reshape(-1, 1)
     
-    
+
+    # Define our model
+    model = PINN(hidden_dim=hidden_dim, num_hidden=num_hidden_layers).to(device)
+  
+    # Define the optimizer and scheduler
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=8e-4, weight_decay=1e-5)
+
+    scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
+   
+    # Define number of epoch
+    num_epoch = 30000
+
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
@@ -256,11 +249,34 @@ if __name__ == "__main__":
 
     scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
 
+    # Setup SoftAdapt
+    softadapt_object = SoftAdapt(beta=0.1)
+
+    # Change 2: Define how often SoftAdapt calculate weights for the loss components
+    epochs_to_make_updates = 5
+    ODE_loss = []
+    data_loss = []
+
+    adapt_weight = [1, 1]
+
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
         loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean)
-        loss = loss_ode + loss_data
+        
+        ODE_loss.append(loss_ode)
+        data_loss.append(loss_data)
+
+        if epoch % epochs_to_make_updates == 0 and epoch != 0:
+            adapt_weight = softadapt_object.get_component_weights(torch.tensor(ODE_loss), 
+                                                                torch.tensor(data_loss),
+                                                                verbose=False,
+                                                                )
+            
+            ODE_loss = []
+            data_loss = []
+  
+        loss = adapt_weight[0] * loss_ode + adapt_weight[1] * loss_data
         loss.backward()
         optimizer.step()
         scheduler.step()
@@ -272,7 +288,8 @@ if __name__ == "__main__":
         if epoch % 100 == 0:
             with torch.no_grad():
                 model.eval()
-                val_loss = model.data_loss(t_val_data, data_val)
+                val_loss = model.data_loss(t_val_data)
+                val_loss = model.loss_fn(val_loss, torch.stack([data_val["D1"], data_val["D2"], data_val["I_sc"], data_val["I_p"], data_val["I_eff"], data_val["G"], data_val["G_sc"]], dim=1))
 
             train_losses.append(loss.item())
             val_losses.append(val_loss.item())
@@ -282,7 +299,8 @@ if __name__ == "__main__":
         if epoch % 1000 == 0:
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {model.GEZI.item():.6f}, S_I: {model.S_I.item():.6f}")
+            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {model.GEZI.item():.6f}, S_I: {model.S_I.item():.6f}")
             # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
 
     

@@ -179,16 +179,7 @@ class PINN(nn.Module):
     def loss(self, t_train, t_data, u, d, data, scaling_mean, scaling_std):
         loss_ode = self.MVP(t_train, u, d, scaling_mean, scaling_std)
         
-        # loss_ODE_std = [res.detach().norm() + 1e-6 for res in loss_ODE]  # Add a small value to avoid division by zero
-        # for val in loss_ODE:
-        #     print(val.max())
-        # return 0
 
-     # Normalize residuals and compute ODE loss
-        # loss_ode = sum(
-        #     torch.mean((res / std) ** 2)
-        #     for res, std in zip(loss_ODE, loss_ODE_std)
-        # )
         
         loss_data = self.data_loss(t_data, data)
 
