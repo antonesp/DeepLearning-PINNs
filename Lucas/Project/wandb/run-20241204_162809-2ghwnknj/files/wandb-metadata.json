@@ -1,0 +1,39 @@
+{
+  "os": "Linux-6.1.116-1.el9.elrepo.x86_64-x86_64-with-glibc2.34",
+  "python": "3.11.9",
+  "startedAt": "2024-12-04T15:28:09.858617Z",
+  "program": "/zhome/31/8/154954/02456/Project/pinn2.py",
+  "codePath": "pinn2.py",
+  "email": "s203768@student.dtu.dk",
+  "root": "/zhome/31/8/154954/02456/Project",
+  "host": "n-62-20-15",
+  "username": "s203768",
+  "executable": "/zhome/31/8/154954/02456/dl/bin/python",
+  "codePathLocal": "pinn2.py",
+  "cpu_count": 24,
+  "cpu_count_logical": 24,
+  "gpu": "Tesla V100-PCIE-32GB",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "76817485824",
+      "used": "5670842368"
+    }
+  },
+  "memory": {
+    "total": "404877045760"
+  },
+  "cpu": {
+    "count": 24,
+    "countLogical": 24
+  },
+  "gpu_nvidia": [
+    {
+      "name": "Tesla V100-PCIE-32GB",
+      "memoryTotal": "34359738368",
+      "cudaCores": 5120,
+      "architecture": "Volta"
+    }
+  ],
+  "cudaVersion": "12.7"
+}

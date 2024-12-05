@@ -1,0 +1,7 @@
+Loaded module: cuda/11.6
+/zhome/31/8/154954/02456/Project/pinn2.py:296: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_train = torch.tensor(ts_train, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:297: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  ts_test = torch.tensor(ts_test, device=device, dtype=torch.float32).reshape(-1,1)
+/zhome/31/8/154954/02456/Project/pinn2.py:394: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  plt.figure()

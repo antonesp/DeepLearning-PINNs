@@ -1,0 +1,185 @@
+% Add packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[danish, english]{babel}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{lipsum}
+\usepackage[intoc]{nomencl} % Nomenclature package
+\usepackage{color}
+\usepackage{soul}
+\usepackage{times}
+\usepackage{textcomp}
+\usepackage{hyperref}
+\usepackage{textpos}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{ifthen}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\DeclareUnicodeCharacter{2212}{-}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage[lined,ruled,linesnumbered,commentsnumbered]{algorithm2e}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{nicematrix}
+\usepackage{setspace}
+\usepackage{makecell}
+\usepackage{subfiles}
+\graphicspath{{figures/}}
+\usepackage{blindtext}
+\SetCommentSty{commentFont}
+\newcommand\commentFont[1]{\textcolor{gray}{#1}}
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{ifthen}
+
+\usepackage{caption, subcaption}
+%\captionsetup[subfigure]{labelformat=simple}
+
+
+
+% Path to graphics
+\graphicspath{{gfx/}}
+
+\everymath{\displaystyle}
+
+% Avoid a warning
+\pdfminorversion=5
+
+
+\usepackage{natbib} % Bibliography package
+%\usepackage{csquotes}
+%\usepackage[style=apa]{biblatex}
+%\DeclareLanguageMapping{danish}{danish-apa}
+%\addbibresource{ref/sources.bib}
+\usepackage{siunitx} % Should stay after \EndPreamble
+
+% Create a theorem environment
+\newtheorem{theorem}{Theorem}
+
+% Enable subfigures
+\newsubfloat{figure}
+
+% Chapter style
+\chapterstyle{madsen}
+
+% Section numbering depth
+\maxtocdepth{subsection}
+\maxsecnumdepth{subsection}
+% Define layout dimensions
+\setlrmarginsandblock{28mm}{28mm}{*}
+\setulmarginsandblock{30mm}{30mm}{*}
+\setheadfoot{8mm}{10mm}
+\checkandfixthelayout
+\OnehalfSpacing
+
+
+% Make floats name bold
+\captionnamefont{\bfseries}
+
+% Enable nomenclature
+\makenomenclature
+
+
+% Enable line numbering
+%\usepackage{lineno}
+%\pagewiselinenumbers
+%\modulolinenumbers[5]
+
+
+% Change table of contents name
+\addto\captionsenglish{% Replace "english" with the language you use
+	\renewcommand{\contentsname}%
+	{Table of Contents}%
+}
+
+
+
+% Get a signature command
+\makeatletter
+\newcommand*{\getlength}[1]{\strip@pt#1}
+\makeatother
+
+\newlength{\signlength}
+\setlength{\signlength}{0.5\textwidth}
+
+\newcommand{\signature}[1]{%
+\noindent \line(1,0){\getlength{\signlength}}\\
+\noindent #1
+}
+
+% Add measuring units to nomenclature
+\newcommand{\nomunit}[1]{\renewcommand{\nomentryend}{\hspace*{\fill}#1}}
+
+\captionstyle{\OnehalfSpacing}
+
+
+% Company logo
+\def\bCompanyLogo{true}
+
+% A fix for memoir-kluwer
+\renewcommand{\bf}{\textbf}
+
+\def\lc{\left\lceil}   
+\def\rc{\right\rceil}
+\def\lf{\left\lfloor}   
+\def\rf{\right\rfloor}
+
+%%% Leg med hvordan autoref definerer ting, og at man kan lave subappendices
+\addto\extrasenglish{%
+  \def\chapterautorefname{Chapter}%
+  \def\sectionautorefname{Section}%
+  \def\subsectionautorefname{Subsection}%
+  \def\subsubsectionautorefname{Subsubsection}%
+  \def\paragraphautorefname{Paragraph}%
+  \def\subparagraphautorefname{Subparagraph}%
+}
+\def\appendixautorefname{Appendix}
+\providecommand*{\listingautorefname}{Listing}
+\def\algorithmautorefname{Algorithm}
+
+% begin appendix autoref patch [\autoref subsections in appendix](https://tex.stackexchange.com/questions/149807/autoref-subsections-in-appendix)
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\hyper@makecurrent}{%
+    \ifx\Hy@param\Hy@chapterstring
+        \let\Hy@param\Hy@chapapp
+    \fi
+}{%
+    \iftoggle{inappendix}{%true-branch
+        % list the names of all sectioning counters here
+        \@checkappendixparam{chapter}%
+        \@checkappendixparam{section}%
+        \@checkappendixparam{subsection}%
+        \@checkappendixparam{subsubsection}%
+        \@checkappendixparam{paragraph}%
+        \@checkappendixparam{subparagraph}%
+    }{}%
+}{}{\errmessage{failed to patch}}
+
+\newcommand*{\@checkappendixparam}[1]{%
+    \def\@checkappendixparamtmp{#1}%
+    \ifx\Hy@param\@checkappendixparamtmp
+        \let\Hy@param\Hy@appendixstring
+    \fi
+}
+\makeatletter
+
+\newtoggle{inappendix}
+\togglefalse{inappendix}
+
+\apptocmd{\appendix}{\toggletrue{inappendix}}{}{\errmessage{failed to patch}}
+\apptocmd{\subappendices}{\toggletrue{inappendix}}{}{\errmessage{failed to patch}}
+% end appendix autoref patch
+
+\pgfplotsset{compat=1.18}
+
+\usepackage{enumitem}
+

@@ -1,0 +1,36 @@
+cuda
+/zhome/31/8/154954/02456/Project
+Training data loaded successfully!
+True parms 0.0081 49.0 47.0 20.1 0.0106 0.0022 1.33 253.0 47.0 5.0
+[1, 64, 128, 256, 128, 7]
+0.0004
+Epoch: 0, Data loss: 378544960.0000, ODE loss: 8960381.0000, Parameter loss: 0.0000
+Epoch: 0, Adaptive data loss: 378544960.0000, Adaptive ODE loss: 8960381.0000, Adaptive parameter loss: 0.0000
+Si: 0.00960, tau1: 47.00040, tau2: 47.00040, Ci: 18.00040, p2: 0.00010, GEZI: 0.00010, EGP0: 1.99960, Vg: 300.00040, taum: 50.00040, tausc: 6.00040
+Epoch: 2000, Data loss: 2629089.2500, ODE loss: 2867497.5000, Parameter loss: 3.1289
+Epoch: 2000, Adaptive data loss: 814621.7216, Adaptive ODE loss: 1057123.7433, Adaptive parameter loss: 1.0059
+Si: 0.00465, tau1: 47.57619, tau2: 47.16495, Ci: 18.57047, p2: -0.00000, GEZI: -0.01769, EGP0: 1.71823, Vg: 300.08963, taum: 50.16368, tausc: 6.15789
+Epoch: 4000, Data loss: 540835.5000, ODE loss: 2282112.0000, Parameter loss: 2.2255
+Epoch: 4000, Adaptive data loss: 174437.8070, Adaptive ODE loss: 811078.0346, Adaptive parameter loss: 0.7167
+Si: 0.00465, tau1: 48.23891, tau2: 47.17545, Ci: 19.20373, p2: 0.00000, GEZI: -0.01492, EGP0: 1.59054, Vg: 300.08963, taum: 50.17709, tausc: 6.16575
+Epoch: 6000, Data loss: 325235.8125, ODE loss: 1895696.2500, Parameter loss: 1.6427
+Epoch: 6000, Adaptive data loss: 100432.1339, Adaptive ODE loss: 700972.5528, Adaptive parameter loss: 0.5280
+Si: 0.00465, tau1: 48.92882, tau2: 47.18649, Ci: 19.87782, p2: 0.00000, GEZI: -0.01282, EGP0: 1.42548, Vg: 300.08963, taum: 50.18470, tausc: 6.17086
+Epoch: 8000, Data loss: 207670.5156, ODE loss: 1260241.7500, Parameter loss: 1.0448
+Epoch: 8000, Adaptive data loss: 67175.3801, Adaptive ODE loss: 446681.1542, Adaptive parameter loss: 0.3365
+Si: 0.00465, tau1: 49.61106, tau2: 47.20940, Ci: 20.55233, p2: 0.00000, GEZI: -0.01022, EGP0: 1.15433, Vg: 300.08963, taum: 50.19070, tausc: 6.18183
+Epoch: 10000, Data loss: 106203.4219, ODE loss: 77395.0781, Parameter loss: 0.4977
+Epoch: 10000, Adaptive data loss: 37209.2319, Adaptive ODE loss: 25343.0456, Adaptive parameter loss: 0.1604
+Si: 0.00465, tau1: 49.71730, tau2: 47.25183, Ci: 20.67261, p2: 0.00000, GEZI: -0.00703, EGP0: 0.80590, Vg: 300.08963, taum: 50.19425, tausc: 6.20581
+Epoch: 12000, Data loss: 33511.4570, ODE loss: 57724.3594, Parameter loss: 0.1680
+Epoch: 12000, Adaptive data loss: 11282.3591, Adaptive ODE loss: 19684.9570, Adaptive parameter loss: 0.0541
+Si: 0.00465, tau1: 49.82209, tau2: 47.30548, Ci: 20.77738, p2: -0.00000, GEZI: -0.00409, EGP0: 0.46543, Vg: 300.08963, taum: 50.21216, tausc: 6.23881
+Epoch: 14000, Data loss: 21701.8125, ODE loss: 46232.7422, Parameter loss: 0.1032
+Epoch: 14000, Adaptive data loss: 7014.8523, Adaptive ODE loss: 16397.8632, Adaptive parameter loss: 0.0332
+Si: 0.00465, tau1: 50.05340, tau2: 47.41067, Ci: 21.01290, p2: -0.00000, GEZI: -0.00324, EGP0: 0.18893, Vg: 300.47998, taum: 50.45680, tausc: 6.29828
+Epoch: 16000, Data loss: 17822.6953, ODE loss: 40201.9141, Parameter loss: 0.0708
+Epoch: 16000, Adaptive data loss: 5767.2006, Adaptive ODE loss: 14244.3772, Adaptive parameter loss: 0.0228
+Si: 0.00428, tau1: 50.46976, tau2: 47.61510, Ci: 21.44101, p2: -0.00000, GEZI: -0.00263, EGP0: 0.03926, Vg: 301.36429, taum: 50.67087, tausc: 6.42465
+Epoch: 18000, Data loss: 17470.1992, ODE loss: 26111.1289, Parameter loss: 0.0178
+Epoch: 18000, Adaptive data loss: 5597.8023, Adaptive ODE loss: 9337.1385, Adaptive parameter loss: 0.0057
+Si: 0.00365, tau1: 51.05073, tau2: 47.81120, Ci: 22.03259, p2: 0.00000, GEZI: -0.00131, EGP0: 0.00017, Vg: 302.00705, taum: 51.28034, tausc: 6.56610
