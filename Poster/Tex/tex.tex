@@ -2,8 +2,8 @@
 
 
 \begin{document}
-	$$PDE\left(\tilde{u}, \lambda^*\right) $$
-	\[ L_{PDE} \]
+	$$ODE\left(\tilde{u}, \lambda^*\right) $$
+	\[ L_{ODE} \]
 	\[ L_{Data} \]
 	\[ Loss \]
 	\[ Data \]
@@ -12,4 +12,37 @@
 	\[ \lambda^* \]
 	\[ DNN(w,b) \]
 	\[ t \]
+	
+	 \[Loss_{w} =  \alpha_1 L_{Data} +\alpha_2L_{ODE} + \alpha_3L_{\lambda^*} \]
+	 
+	 \[\alpha_k = \frac{e^{\beta S_k}}{\sum_{j=1}^n e ^{\beta S_j} }\]
+	 
+	 \[\alpha_k = \frac{l_k e^{\beta S_k}}{\sum_{j=1}^n l_j e ^{\beta S_j} }\]
+	 
+	 $S_k$ is rate of change over last 5 epochs in loss k
+	 We normalize $S$
+	 
+	 
+	 \begin{table}[h!]
+	 	\centering
+	 	\begin{tabular}{|c|c|c|c|c|c|}
+	 		\hline
+	 		\multicolumn{2}{|c|}{\textbf{Parameters}} & \multicolumn{2}{c|}{\textbf{PINN}} & \multicolumn{2}{c|}{\textbf{Bagterp et al.}} \\ \hline
+	 		\textbf{Name} & \textbf{True Value} & \textbf{Estimate} & \textbf{RE(\%)} & \textbf{Estimates} & \textbf{RE(\%)} \\ \hline
+	 		$\tau_1$    &  49.0  &  51.992  &  6.11   & 69.0     & 40.8     \\ \hline
+	 		$\tau_2$    &  47.0  &  52.606  &  11.9   & 69.0     & 46.8     \\ \hline
+	 		$C_i$   	&  20.1  &  23.741  &   18.1  & 2.7      & 32.7     \\ \hline
+	 		$p_2$      &  0.0106   &  0.000   &  100.0   & 1.4      & 36.1     \\ \hline
+	 		$S_i$      &  0.0081   &  0.005   &  43.6   & 9.2      & 12.9     \\ \hline
+	 		$GEZI$    & 0.0022    & -0.000   & 100.9    & 11.2     & 435.5    \\ \hline
+	 		$EGP_0$    & 1.33    & 0.0001    & 100.0    & 2.1      & 55.3     \\ \hline
+	 		$V_g$      & 253.0  & 301.207  & 19.1    & 239.9    & 5.2      \\ \hline
+	 		$\tau_m$    & 47.0   & 61.865   & 31.6    & 44.6     & 5.4      \\ \hline
+	 	\end{tabular}
+	 	\caption{Comparison of parameter true values, PINN final guesses, relative errors, and predictions by Bagterp et al.}
+	 	\label{tab:parameter_comparison}
+	 \end{table}
+	 
+	 \[ SSRE = \sum_{i=1}^{n}\left(\frac{\lambda^{est}_i - \lambda_i^{true} }{\lambda_i^{true}}\right)^2 \]
 \end{document}
+
