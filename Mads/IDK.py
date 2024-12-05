@@ -11,9 +11,9 @@ import numpy as np
 import sys
 import os
 from Load_data2 import custom_csv_parser
-
 from softadapt import SoftAdapt, LossWeightedSoftAdapt
 
+from prettytable import PrettyTable
 
 def grad(func, var):
     '''
@@ -32,38 +32,40 @@ def grad(func, var):
 class PINN(nn.Module):
     
     def __init__(self, input_dim=1, hidden_dim=20, output_dim=7, num_hidden=1):
-        super().__init__()               
-        self.input = nn.Linear(in_features=input_dim, out_features=hidden_dim)
+        super().__init__()     
 
+        # Define the layers
+        self.input = nn.Linear(in_features=input_dim, out_features=hidden_dim)
+        self.output = nn.Linear(in_features=hidden_dim, out_features=output_dim)
         self.hidden = nn.ModuleList()
         for _ in range(num_hidden):
-            self.hidden.append(nn.Linear(in_features=hidden_dim, out_features=hidden_dim))
+            self.hidden.append(nn.Linear(in_features=hidden_dim, out_features=hidden_dim)) 
         
-        
-        self.output = nn.Linear(in_features=hidden_dim, out_features=output_dim)
-        
+        # Initialize weights
         self._initialize_weights()
 
         # Define activation function
-        self.activation = nn.SiLU()
+        self.activation = nn.Tanh()
 
         # Define loss function
         self.loss_fn = nn.MSELoss()
 
-        # Define patient parameters
-        self.tau_1 = torch.tensor([49.0], device=device)       # [min]
-        self.tau_2 = torch.tensor([47.0], device=device)       # [min]
-        self.C_I = torch.tensor([20.1], device=device)         # [dL/min]
-        self.p_2 = torch.tensor([0.0106], device=device)       # [min^(-1)]
-        # self.GEZI = torch.tensor([0.0022], requires_grad=True, device=device)      # [min^(-1)]
-        self.GEZI = Parameter(torch.tensor([0.001], requires_grad=True, device=device))      # [min^(-1)]
-        self.EGP_0 = torch.tensor([1.33], device=device)       # [(mg/dL)/min]
-        self.V_G = torch.tensor([253.0], device=device)        # [dL]
-        self.tau_m = torch.tensor([47.0], device=device)       # [min]
-        self.tau_sc = torch.tensor([5.0], device=device)       # [min]
-        # self.S_I = torch.tensor([0.0081], requires_grad=True, device=device)
-        self.S_I = Parameter(torch.tensor([0.001], requires_grad=True, device=device))
-        
+        # Define softplus as to not get negative values
+        self.softplus = nn.Softplus()
+
+        # Define patient parameters 
+        self.tau_1 =    Parameter(torch.tensor([47.0], requires_grad=True, device=device))       # [min]
+        self.tau_2 =    Parameter(torch.tensor([47.0], requires_grad=True, device=device))       # [min]
+        self.C_I =      Parameter(torch.tensor([18.0], requires_grad=True, device=device))         # [dL/min]
+        self.p_2 =      Parameter(torch.tensor([0.0005], requires_grad=True, device=device))       # [min^(-1)]
+        self.GEZI =     Parameter(torch.tensor([0.0005], requires_grad=True, device=device))      # [min^(-1)]
+        self.EGP_0 =    Parameter(torch.tensor([2.0], requires_grad=True, device=device))       # [(mg/dL)/min]
+        self.V_G =      Parameter(torch.tensor([300.0], requires_grad=True, device=device))        # [dL]
+        self.tau_m =    Parameter(torch.tensor([50.0], requires_grad=True, device=device))       # [min]
+        self.tau_sc =   Parameter(torch.tensor([6.0], requires_grad=True, device=device))       # [min]
+        self.S_I =      Parameter(torch.tensor([0.01], requires_grad=True, device=device))
+    
+
     def forward(self, t):
         u = self.activation(self.input(t))
 
@@ -72,9 +74,8 @@ class PINN(nn.Module):
 
         u = self.output(u)
 
-        u = torch.nn.Softplus()(u)
-
         return u
+
 
     def _initialize_weights(self):
         # Initialize weights using Xavier initialization and biases to zero
@@ -84,12 +85,12 @@ class PINN(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def MVP(self, t, u, d, scaling_mean):
+    def MVP(self, t, u, d):
         '''
         Input:
             x: Is the state tensor 
         '''
-        
+
         # Calculate the state vector
         X = self.forward(t)
 
@@ -127,8 +128,8 @@ class PINN(nn.Module):
         G_sc_t = grad(G_sc, t)
                 
         # Define our ODEs
-        Meal_1 = D_1_t - d + (D_1 / tau_m)
-        Meal_2 = D_2_t - (D_1 / tau_m) + (D_2 / tau_m)
+        Meal1 = D_1_t - d + (D_1 / tau_m)
+        Meal2 = D_2_t - (D_1 / tau_m) + (D_2 / tau_m)
 
         Insulin1 = I_sc_t - (u/(tau_1*C_I)) + (I_sc / tau_1)
         Insulin2 = I_p_t - (I_sc / tau_2) + (I_p / tau_2)
@@ -136,58 +137,48 @@ class PINN(nn.Module):
 
         Glucose1 = G_t + (GEZI + I_eff) * G - EGP_0 - ((1000 * D_2) / (V_G * tau_m))
         Glucose2 = G_sc_t - (G / tau_sc) + (G_sc / tau_sc)
-
-        # Create a model matrix
-        mvp = torch.stack([Meal_1, Meal_2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2], dim=1)
+                
+        # Save all the ODEs in a tensor
+        mvp = torch.stack([Meal1, Meal2, Insulin1, Insulin2, Insulin3, Glucose1, Glucose2], dim=1)
 
         return mvp
 
-    def data_loss(self, t):
-        X = self.forward(t)
-
-        # Meal system
-        D_1 = X[:, 0]
-        D_2 = X[:, 1]
+    def data_loss(self, t, data):
         
-        # Insulin system
-        I_sc = X[:, 2]
-        I_p = X[:, 3]
-        I_eff = X[:, 4]
+        
+        # Calculate the state vector
+        X = self.forward(t)
         
         # Glucose system        
         G = X[:, 5]
-        G_sc = X[:, 6]
 
-        # Define data matrix
-        data_matrix = torch.stack([D_1, D_2, I_sc, I_p, I_eff, G, G_sc], dim=1)
+        # Scale the data
+        G_data = data["G"].clone()
 
-        return data_matrix
+        # Calculate the loss
+        loss_data = self.loss_fn(G, G_data)
 
-    def loss(self, t_train, t_data, u, d, data, scaling_mean):
+        return loss_data
+
+    def loss(self, t_train, u, d, data):
+        ODE = self.MVP(t_train, u, d)
+        True_ODE = torch.zeros_like(ODE)
+        loss_ode = self.loss_fn(ODE, True_ODE)
+
         
-        # Setup the ODE loss
-        ODE = self.MVP(t_train, u, d, scaling_mean)
-        Ans = torch.zeros_like(ODE)
-        loss_ode = self.loss_fn(ODE, Ans)
+        loss_data = self.data_loss(t_train, data)
 
-        # Setup the data loss
-        data_model = self.data_loss(t_data)
+        loss = loss_ode + loss_data
 
-        # Convert data away from dict
-        data = torch.stack([data["D1"], data["D2"], data["I_sc"], data["I_p"], data["I_eff"], data["G"], data["G_sc"]], dim=1)
-
-        loss_data = self.loss_fn(data_model, data)
-        
-        return loss_ode, loss_data
+        return loss, loss_ode, loss_data
 
 if __name__ == "__main__":
     # Check for CUDA availability
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('cpu')
 
     # Define our model parameters
     hidden_dim = 128
-    num_hidden_layers = 2
+    num_hidden_layers = 3
 
     # Load data and pre-process
     data = custom_csv_parser('Patient2.csv')
@@ -195,14 +186,14 @@ if __name__ == "__main__":
 
     # Split data into training and validation
     torch.manual_seed(42)
-
     indices = torch.randperm(n_data)
-
-
-    n_train = int(n_data * 0.1)   # 80% training data
+    n_train = int(n_data * 0.8)   # 80% training data
 
     train_indices = indices[:n_train]
     val_indices = indices[n_train:]
+
+    # Define  
+    T = data["t"][-1]
 
     # Split the data dictionary 
     data_train = {}
@@ -213,31 +204,16 @@ if __name__ == "__main__":
         data_train[key] = data_tensor[train_indices]
         data_val[key] = data_tensor[val_indices]
 
-
-    # Collocation points
-    ### Options for improvement, try and extrend the collocation points after a large sum of training epochs, T + 5 or something
-    
-    d_train = data_train["Meal"]
-    d_val = data_val["Meal"]
-    
-    u_train = data_train["Insulin"]
-    u_val = data_val["Insulin"]
-    
-    t_train_data = data_train["t"].reshape(-1, 1)
-    t_val_data = data_val["t"].reshape(-1, 1)
-    
-    T = data["t"][-1]
-    t_train = torch.linspace(0, T, n_train, requires_grad=True, device=device).reshape(-1, 1)
-    
+    d_train = data_train["Meal"].clone()
+    u_train = data_train["Insulin"].clone()
+    t_train = data_train["t"].clone().requires_grad_(True).reshape(-1, 1)
+    t_val = data_val["t"].clone().requires_grad_(True).reshape(-1, 1)
 
     # Define our model
     model = PINN(hidden_dim=hidden_dim, num_hidden=num_hidden_layers).to(device)
-  
-    # Define the optimizer and scheduler
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=8e-4, weight_decay=1e-5)
-
-    scheduler = StepLR(optimizer, step_size=10000, gamma=0.95)
+    # Define the optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
    
     # Define number of epoch
     num_epoch = 30000
@@ -247,26 +223,38 @@ if __name__ == "__main__":
     val_losses = []
     learning_rates = []
 
-    scaling_mean = torch.Tensor([data_train["D1"].mean(), data_train["D2"].mean(), data_train["I_sc"].mean(), data_train["I_p"].mean(), data_train["I_eff"].mean(), data_train["G"].mean(), data_train["G_sc"].mean()])
 
     # Setup SoftAdapt
     softadapt_object = SoftAdapt(beta=0.1)
-
-    # Change 2: Define how often SoftAdapt calculate weights for the loss components
     epochs_to_make_updates = 5
     ODE_loss = []
     data_loss = []
+    adapt_weight = [1.0, 1.0]   
 
-    adapt_weight = [1, 1]
+    # Define the true parameters
+    tau1_true = 49.0
+    tau2_true = 47.0
+    Ci_true = 20.1
+    p2_true = 0.0106
+    GEZI_true = 0.0022
+    EGP0_true = 1.33
+    Vg_true = 253.0
+    taum_true = 47.0
+    tausc_true = 5.0
+    Si_true = 0.0081
+
+    relative_errs = []
 
     # Begin training our model
     for epoch in range(num_epoch):
         optimizer.zero_grad()
-        loss_ode, loss_data = model.loss(t_train, t_train_data, u_train, d_train, data_train, scaling_mean)
-        
+        _, loss_ode, loss_data = model.loss(t_train, u_train, d_train, data_train)
+        loss = adapt_weight[0] * loss_ode + adapt_weight[1] * loss_data
+        loss.backward()
+        optimizer.step()
+        # Calculate softadapt weights
         ODE_loss.append(loss_ode)
         data_loss.append(loss_data)
-
         if epoch % epochs_to_make_updates == 0 and epoch != 0:
             adapt_weight = softadapt_object.get_component_weights(torch.tensor(ODE_loss), 
                                                                 torch.tensor(data_loss),
@@ -275,35 +263,93 @@ if __name__ == "__main__":
             
             ODE_loss = []
             data_loss = []
-  
-        loss = adapt_weight[0] * loss_ode + adapt_weight[1] * loss_data
-        loss.backward()
-        optimizer.step()
-        scheduler.step()
-        
-        # Get current learning rate
-        current_lr = optimizer.param_groups[0]['lr']
+
 
         # Create the console output and plot
         if epoch % 100 == 0:
             with torch.no_grad():
                 model.eval()
-                val_loss = model.data_loss(t_val_data)
-                val_loss = model.loss_fn(val_loss, torch.stack([data_val["D1"], data_val["D2"], data_val["I_sc"], data_val["I_p"], data_val["I_eff"], data_val["G"], data_val["G_sc"]], dim=1))
+                val_loss = model.data_loss(t_val, data_val)
+                sum_rel_errors = (abs(Si_true - model.S_I.item()) / Si_true 
+                                + abs(tau1_true - model.tau_1.item()) / tau1_true 
+                                + abs(tau2_true - model.tau_2.item()) / tau2_true 
+                                + abs(Ci_true - model.C_I.item()) / Ci_true 
+                                + abs(p2_true - model.p_2.item()) / p2_true 
+                                + abs(GEZI_true - model.GEZI.item()) / GEZI_true 
+                                + abs(EGP0_true - model.EGP_0.item()) / EGP0_true 
+                                + abs(Vg_true - model.V_G.item()) / Vg_true 
+                                + abs(taum_true - model.tau_m.item()) / taum_true 
+                                + abs(tausc_true - model.tau_sc.item()) / tausc_true)
+                relative_errs.append(sum_rel_errors)
 
             train_losses.append(loss.item())
             val_losses.append(val_loss.item())
-            learning_rates.append(current_lr)
+            # learning_rates.append(current_lr)
 
             # Print training and validation loss
         if epoch % 1000 == 0:
-            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
+            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}")
             # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, S_I: {S_I.item():.6f}")
-            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {model.GEZI.item():.6f}, S_I: {model.S_I.item():.6f}")
-            print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {model.GEZI.item():.6f}, S_I: {model.S_I.item():.6f}")
+            # print(f"Epoch {epoch}, Loss: {loss.item():.6f}, Val Loss: {val_loss.item():.6f}, GEZI: {GEZI.item():.6f}, S_I: {S_I.item():.6f}")
             # print(f"Epoch {epoch}, Loss ODE: {loss_ode.item():.6f}, Loss data: {loss_data.item():.6f}")#, S_I: {S_I.item():.6f}")
-
     
+    parameter_info = [
+        ('tau_1', 49.0),
+        ('tau_2', 47.0),
+        ('C_I', 20.1),
+        ('p_2', 0.0106),
+        ('GEZI', 0.0022),
+        ('EGP_0', 1.33),
+        ('V_G', 253.0),
+        ('tau_m', 47.0),
+        ('tau_sc', 5.0),
+        ('S_I', 0.0081)
+    ]
+
+    estimated_values = []
+    true_values = []
+    relative_errors = []
+
+    # Step 3: Compute estimated values and relative errors
+    with torch.no_grad():
+        for name, true_value in parameter_info:
+            raw_param = getattr(model, f'{name}')
+            est_value = raw_param.item()
+            rel_error = abs((est_value - true_value) / true_value)
+            estimated_values.append(est_value)
+            true_values.append(true_value)
+            relative_errors.append(rel_error)
+
+    # Step 4: Create and populate the PrettyTable
+    table = PrettyTable()
+    table.field_names = ["Parameter", "Estimated Value", "True Value", "Relative Error"]
+
+    for name, est_value, true_value, rel_error in zip(
+            [p[0] for p in parameter_info], estimated_values, true_values, relative_errors):
+        # Determine formatting based on the parameter's magnitude
+        if true_value >= 1.0:
+            est_str = f"{est_value:.4f}"
+            true_str = f"{true_value:.4f}"
+        else:
+            est_str = f"{est_value:.6f}"
+            true_str = f"{true_value:.6f}"
+        rel_err_str = f"{rel_error:.2f}"
+        table.add_row([name, est_str, true_str, rel_err_str])
+
+    # Align the columns
+    table.align["Parameter"] = "l"
+    table.align["Estimated Value"] = "r"
+    table.align["True Value"] = "r"
+    table.align["Relative Error"] = "r"
+
+    # Display the table
+    print(table)
+    print(relative_errs[-1])
+
+
+
+
+
 
     # Plot training and validation losses and learning rate
     plt.figure(figsize=(18, 5))
@@ -317,14 +363,6 @@ if __name__ == "__main__":
     plt.ylabel('Loss')
     plt.title('Training and Validation Losses')
     plt.legend()
-
-    # Second subplot for learning rate
-    # plt.subplot(1, 3, 2)
-    # plt.plot(epochs, learning_rates, label='Learning Rate', color='green')
-    # plt.xlabel('Epoch')
-    # plt.ylabel('Learning Rate')
-    # plt.title('Learning Rate Schedule')
-    # plt.legend()
 
     # Third subplot for glucose predictions
     plt.subplot(2, 4, 2)
@@ -341,7 +379,7 @@ if __name__ == "__main__":
 
     plt.subplot(2, 4, 3)
     Gsc_pred = X_pred[:, 6].detach().cpu().numpy()
-    plt.plot(t_test.cpu().numpy(), Gsc_pred, label='Predicted (Gsc)')
+    plt.plot(t_test.cpu().numpy(), Gsc_pred , label='Predicted (Gsc)')
     plt.plot(data["t"], data["G_sc"], label='True (Gsc)')
     plt.legend()
 
