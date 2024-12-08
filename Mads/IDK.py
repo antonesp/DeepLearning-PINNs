@@ -280,6 +280,7 @@ class PINN(nn.Module):
 
     def loss(self, t_train, t_data, u, d, data, scale=None):
         ODE = self.MVP_nondim(t_train, u, d, scale)
+        # ODE = self.MVP(t_train, u, d, scale)
         True_ODE = torch.zeros_like(ODE[:, 0], device=device)
 
         loss_d1 = self.loss_fn(ODE[:, 0], True_ODE)
@@ -351,18 +352,19 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
     # Define number of epoch
-    num_epoch = 5000
+    num_epoch = 15000
 
     # Setup arrays for saving the losses
     train_losses = []
     val_losses = []
     learning_rates = []
 
-    scale = [47.0, 47.0, 0.0477, 0.0477, 0.0000193, 454.54, 4272.676, 47.0]
+    # scale = [47.0, 47.0, 0.0477, 0.0477, 0.0000193, 454.54, 4272.676, 47.0]
+    scale = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 
     # Setup SoftAdapt
-    softadapt_object = NormalizedSoftAdapt(beta=0.1)
+    softadapt_object = SoftAdapt(beta=0.1)
     epochs_to_make_updates = 5
     ODE_loss1 = []
     ODE_loss2 = []
