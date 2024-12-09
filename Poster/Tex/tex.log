@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.10.24)  5 DEC 2024 15:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.10.24)  9 DEC 2024 10:14
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -413,20 +413,26 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
 [1{C:/Users/lucas/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 ] [2]
-(tex.aux)
+[3] (tex.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5094 strings out of 474824
- 79211 string characters out of 5750976
- 1930043 words of memory out of 5000000
- 27042 multiletter control sequences out of 15000+600000
+ 5096 strings out of 474824
+ 79266 string characters out of 5750976
+ 1941043 words of memory out of 5000000
+ 27044 multiletter control sequences out of 15000+600000
  561768 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  85i,11n,93p,251b,250s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -437,14 +443,15 @@ ublic/amsfonts/cm/cmmi10.pfb><C:/Users/lucas/AppData/Local/Programs/MiKTeX/font
 s/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/lucas/AppData/Local/Programs/MiK
 TeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/lucas/AppData/Local/Prog
 rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/lucas/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/lucas/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/
-lucas/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C
-:/Users/lucas/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy
-8.pfb>
-Output written on tex.pdf (2 pages, 119104 bytes).
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/lucas/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/lu
+cas/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
+/Users/lucas/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6
+.pfb><C:/Users/lucas/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmsy8.pfb>
+Output written on tex.pdf (3 pages, 132409 bytes).
 PDF statistics:
- 59 PDF objects out of 1000 (max. 8388607)
+ 67 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -13,11 +13,23 @@
 	\[ DNN(w,b) \]
 	\[ t \]
 	
-	 \[Loss_{w} =  \alpha_1 L_{Data} +\alpha_2L_{ODE} + \alpha_3L_{\lambda^*} \]
+	 \[Loss_{w} = L_{\lambda^*} + \alpha_1 L_{Data} + \alpha_{2}L_{ODE_1} + \dots + \alpha_8L_{ODE_7} \]
 	 
 	 \[\alpha_k = \frac{e^{\beta S_k}}{\sum_{j=1}^n e ^{\beta S_j} }\]
 	 
 	 \[\alpha_k = \frac{l_k e^{\beta S_k}}{\sum_{j=1}^n l_j e ^{\beta S_j} }\]
+	 
+	 \[ \left|\left|S_k\right|\right|_2 = 1 \]
+	 
+	 \[ S_k \]
+	 
+	 \[ \beta = 0.1 \]
+	 
+	 \[ L_{\lambda^*} \]
+	 
+	 \[ S_i \]
+	 \[ GEZI \]
+	 \[ EGP_0 \]
 	 
 	 $S_k$ is rate of change over last 5 epochs in loss k
 	 We normalize $S$
@@ -34,7 +46,7 @@
 	 		$C_i$   	&  20.1  &  23.741  &   18.1  & 2.7      & 32.7     \\ \hline
 	 		$p_2$      &  0.0106   &  0.000   &  100.0   & 1.4      & 36.1     \\ \hline
 	 		$S_i$      &  0.0081   &  0.005   &  43.6   & 9.2      & 12.9     \\ \hline
-	 		$GEZI$    & 0.0022    & -0.000   & 100.9    & 11.2     & 435.5    \\ \hline
+	 		$GEZI$    & 0.0022    & -0.000   & 100.9    & 11.2     &  435.5   \\ \hline
 	 		$EGP_0$    & 1.33    & 0.0001    & 100.0    & 2.1      & 55.3     \\ \hline
 	 		$V_g$      & 253.0  & 301.207  & 19.1    & 239.9    & 5.2      \\ \hline
 	 		$\tau_m$    & 47.0   & 61.865   & 31.6    & 44.6     & 5.4      \\ \hline
@@ -44,5 +56,51 @@
 	 \end{table}
 	 
 	 \[ SSRE = \sum_{i=1}^{n}\left(\frac{\lambda^{est}_i - \lambda_i^{true} }{\lambda_i^{true}}\right)^2 \]
+	 
+	 
+	 \begin{table}[h!]
+	 	\centering
+	 	\begin{tabular}{|c|c|c|c|c|}
+	 		\hline
+	 		\multicolumn{2}{|c|}{\textbf{Parameters}} & \multicolumn{2}{c|}{\textbf{PINN}} & \textbf{Bagterp et al. } \\ \hline
+	 		\textbf{Parameter} & \textbf{True Value} & \textbf{Estimate} & \textbf{RE(\%)} & \textbf{RE(\%)} \\ \hline
+	 		 $\tau_1$     &  49.0000   &  48.2967    &  1.44     & 40.8     \\ \hline
+	 		 $\tau_2$   &  47.0000  &  50.5698 &  7.60   & 46.8     \\ \hline
+	 		 $C_i$      &  20.1000  &  19.8929  &   1.03   & 32.7     \\ \hline
+	 		 $p_2$      &  0.0106  &  0.0032  &   69.8   & 36.1     \\ \hline
+	 		 $GEZI$     &   0.0022  &  -0.0000   &   101.97   &  435.5   \\ \hline
+	 		$S_i$       &  0.0081   &  0.0009   &  88.9   &  12.9    \\ \hline
+	 		$EGP_0$     & 1.3300    & 0.0000    & 100.0    & 55.3     \\ \hline
+	 		$V_g$       & 253.0000  & 280.4632  & 10.86    & 5.2      \\ \hline
+	 		$\tau_m$    & 47.0000   & 54.2197   & 15.36    & 5.4      \\ \hline
+	 		$\tau_{sc}$  & 5.0000    & 4.4335    & 11.33    & N/A        \\ \hline
+	 	\end{tabular}
+	 	\caption{Comparison of parameter true values, PINN final guesses, relative errors, and Bagterp et al.'s relative errors.}
+	 	\label{tab:parameter_compariso3n}
+	 \end{table}
+	 
+	 \begin{table}[h!]
+	 	\centering
+	 	\begin{tabular}{|c|c|c|c|c|c|}
+	 		\hline
+	 		\multicolumn{2}{|c|}{\textbf{Parameters}} & \multicolumn{2}{c|}{\textbf{PINN}} & \multicolumn{2}{c|}{\textbf{Bagterp et al.}} \\ \hline
+	 		\textbf{Parameter} & \textbf{True Value} & \textbf{Estimate} & \textbf{RE(\%)} & \textbf{Estimate} & \textbf{RE(\%)} \\ \hline
+	 	    $\tau_1$&  49.0000   &  48.2967   &  1.44    & 69.0     & 40.8     \\ \hline
+	 		 $	\tau_2$   & 47.0000    &  50.5698   &  7.60    & 69.0     & 46.8     \\ \hline
+	 	 	$C_i$   &  20.1000  &  19.8929  &  1.03   & 2.7      & 32.7     \\ \hline
+	 	 $	p_2$    &  0.0106  &  0.0032  &  69.8    & 1.4      & 36.1     \\ \hline
+	 	   $S_i $   &  0.0081   &   0.0009   &  88.9    & 9.2      & 12.9     \\ \hline
+	 		$GEZI$    & 0.0022    & -0.0000   & 101.97   & 11.2     & 435.5    \\ \hline
+	 		$EGP_0$    & 1.3300    & 0.0000    & 100.0    & 2.1      & 55.3     \\ \hline
+	 		$V_g$      & 253.0000  & 280.4632  & 10.86    & 239.9    & 5.2      \\ \hline
+	 		$\tau_m$    & 47.0000   & 54.2197   & 15.36    & 44.6     & 5.4      \\ \hline
+	 		$\tau_{sc}$   & 5.0000    & 4.4335    & 11.33    & N/A        & N/A        \\ \hline
+	 	\end{tabular}
+	 	\caption{Comparison of parameter true values, PINN final guesses, relative errors, and predictions by Bagterp et al.}
+	 	\label{tab:parameter_compariso43n}
+	 \end{table}
+	 
+	 
+	 
 \end{document}
 
