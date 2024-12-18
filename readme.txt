@@ -11,5 +11,15 @@ plots
 Contains all data created by running above scripts
 
 SoftAdapt:
-fun
+Library for softadapt
+Borrowed from https://github.com/dr-aheydari/SoftAdapt
+
+functions:
+Our helper functions for loading data 
+
+csvs:
+Patient.csv and Patient2.csv contain simulated data of the ODE's
+
+DONT-OPEN Our testing ground:
+All the weird and failed tests we have tried during the project. You're welcome to look, but we wont promise that anything works.
 
