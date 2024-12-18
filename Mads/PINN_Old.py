@@ -194,7 +194,7 @@ if __name__ == "__main__":
     num_hidden_layers = 3
 
     # Load data and pre-process
-    data = custom_csv_parser('Patient2.csv')
+    data = custom_csv_parser('../Patient2.csv')
     n_data = len(data["G"])
 
     # Split data into training and validation
