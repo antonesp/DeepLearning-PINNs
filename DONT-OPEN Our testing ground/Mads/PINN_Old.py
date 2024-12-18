@@ -194,7 +194,11 @@ if __name__ == "__main__":
     num_hidden_layers = 3
 
     # Load data and pre-process
+<<<<<<< HEAD
     data = custom_csv_parser('Patient3.csv')
+=======
+    data = custom_csv_parser('../Patient2.csv')
+>>>>>>> Mads_GitConf
     n_data = len(data["G"])
 
     # Split data into training and validation
